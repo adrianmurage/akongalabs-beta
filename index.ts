@@ -47,9 +47,9 @@ app.get("/health", (_req, res) => {
 });
 
 // Start server
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(
-    `🐼 Server Panda is running on port ${PORT}. http://localhost:${PORT}`,
+    `🐼 Server Panda is running on port ${PORT}. http://0.0.0.0:${PORT}`,
   );
 });
 
