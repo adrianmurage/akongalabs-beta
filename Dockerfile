@@ -4,6 +4,9 @@
 ARG NODE_VERSION=22.16.0
 FROM node:${NODE_VERSION}-slim AS base
 
+# Cache busting argument - pass current timestamp or commit hash to invalidate cache
+ARG CACHE_BUST
+
 LABEL fly_launch_runtime="Node.js"
 
 # Node.js app lives here
@@ -28,6 +31,9 @@ RUN yarn install --frozen-lockfile --production=false
 
 # Copy application code
 COPY . .
+
+# Cache bust label using build arg
+LABEL cache_bust=$CACHE_BUST
 
 # Build TypeScript
 RUN yarn tsc
