@@ -21,6 +21,7 @@ if (!databaseUrl) {
     connectionString: databaseUrl,
   });
   db = drizzle({ client: pool });
+  console.log("Database connection initialized successfully");
 }
 
 // Test database connection

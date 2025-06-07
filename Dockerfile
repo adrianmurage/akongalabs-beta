@@ -22,12 +22,15 @@ FROM base AS build
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y build-essential node-gyp pkg-config python-is-python3
 
-# Install node modules
+# Install node modules (including dev dependencies for build)
 COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile
+RUN yarn install --frozen-lockfile --production=false
 
 # Copy application code
 COPY . .
+
+# Build TypeScript
+RUN yarn tsc
 
 
 # Final stage for app image
@@ -38,4 +41,4 @@ COPY --from=build /app /app
 
 # Start the server by default, this can be overwritten at runtime
 EXPOSE 3000
-CMD [ "node", "index.ts" ]
+CMD [ "node", "build/index.js" ]
