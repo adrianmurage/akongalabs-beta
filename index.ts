@@ -1,6 +1,6 @@
 import "dotenv/config";
 import express from "express";
-import { Sequelize } from "sequelize";
+import { isDatabaseConfigured, testDatabaseConnection } from "./src/db.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -9,44 +9,18 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Check if DATABASE_URL is defined
-const databaseUrl = process.env.DEV_DATABASE_URL;
-let sequelize: Sequelize | null = null;
-
-if (!databaseUrl) {
-  console.warn(
-    "DEV_DATABASE_URL environment variable is not defined - database features will be unavailable",
-  );
-} else {
-  sequelize = new Sequelize(databaseUrl);
-}
-
-async function test_db_connection() {
-  if (!sequelize) {
-    return false;
-  }
-
-  try {
-    await sequelize.authenticate();
-    return true;
-  } catch (error) {
-    console.error("Unable to connect to the database:", error);
-    return false;
-  }
-}
-
 // Health check db route
 app.get("/db-health", (_req, res) => {
-  if (!sequelize) {
+  if (!isDatabaseConfigured()) {
     res.status(503).json({
       error: "Database not configured",
-      message: "DEV_DATABASE_URL environment variable is not set",
+      message: "Database URL environment variable is not set",
       timestamp: new Date().toISOString(),
     });
     return;
   }
 
-  test_db_connection()
+  testDatabaseConnection()
     .then((result) => {
       if (result) {
         res.json({ status: "OK", timestamp: new Date().toISOString() });
