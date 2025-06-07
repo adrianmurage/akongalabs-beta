@@ -1,11 +1,12 @@
 import "dotenv/config";
 import express from "express";
 import { isDatabaseConfigured, testDatabaseConnection } from "./src/db.js";
-
+import cors from 'cors';
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 // Middleware
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -33,6 +34,11 @@ app.get("/db-health", (_req, res) => {
       console.error("Unable to connect to the database:", error);
       res.status(500).json({ error: "Database connection failed" });
     });
+});
+
+// A route that returns the text "Hello from server"
+app.get("/", (_req, res) => {
+  res.send("Hello from server");
 });
 
 // Health check route

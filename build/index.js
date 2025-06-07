@@ -1,24 +1,44 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const app = (0, express_1.default)();
+import "dotenv/config";
+import express from "express";
+import { isDatabaseConfigured, testDatabaseConnection } from "./src/db.js";
+import cors from 'cors';
+const app = express();
 const PORT = process.env.PORT || 3000;
 // Middleware
-app.use(express_1.default.json());
-app.use(express_1.default.urlencoded({ extended: true }));
-// Basic route
-app.get('/', (_req, res) => {
-    res.json({ message: 'Hello from Server Panda! 🐼' });
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+// Health check db route
+app.get("/db-health", (_req, res) => {
+    if (!isDatabaseConfigured()) {
+        res.status(503).json({
+            error: "Database not configured",
+            message: "Database URL environment variable is not set",
+            timestamp: new Date().toISOString(),
+        });
+        return;
+    }
+    testDatabaseConnection()
+        .then((result) => {
+        if (result) {
+            res.json({ status: "OK", timestamp: new Date().toISOString() });
+        }
+        else {
+            console.error("Unable to connect to the database");
+            res.status(500).json({ error: "Database connection failed" });
+        }
+    })
+        .catch((error) => {
+        console.error("Unable to connect to the database:", error);
+        res.status(500).json({ error: "Database connection failed" });
+    });
 });
 // Health check route
-app.get('/health', (_req, res) => {
-    res.json({ status: 'OK', timestamp: new Date().toISOString() });
+app.get("/health", (_req, res) => {
+    res.json({ status: "OK", timestamp: new Date().toISOString() });
 });
 // Start server
 app.listen(PORT, () => {
-    console.log(`🐼 Server Panda is running on port ${PORT}`);
+    console.log(`🐼 Server Panda is running on port ${PORT}. http://localhost:${PORT}`);
 });
-exports.default = app;
+export default app;
