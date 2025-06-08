@@ -4,10 +4,23 @@ A production-ready Express.js server built with TypeScript, PostgreSQL, and Dock
 
 ## Quick Start
 
+### Prerequisites
+
+- Node.js 22.16.0 or higher
+- PostgreSQL database
+- Docker (for containerized deployment)
+- Fly CLI (for deployment)
+
+### Installation
+
 ```bash
 # Clone and setup
 git clone git@github.com:Adrian-corp/server-panda.git
+
+# change dire
 cd server-panda
+
+# install dependencies
 yarn install
 
 # Set up environment
@@ -31,62 +44,26 @@ Server Panda is a modern Node.js backend application featuring:
 
 ## Development Setup
 
-### Prerequisites
+### Database Configuration
 
-- Node.js 22.16.0 or higher
-- PostgreSQL database
-- Docker (for containerized deployment)
-- Fly CLI (for deployment)
+The application uses Drizzle ORM with PostgreSQL. Database configuration automatically switches between development and production based on `NODE_ENV`.
 
-### Installation
+- **Development:** Uses `DEV_DATABASE_URL`
+- **Production:** Uses `DATABASE_URL`
 
-1. **Install dependencies:**
-   ```bash
-   yarn install
-   ```
+### Using Fly.io Hosted Database (Recommended for Development)
 
-2. **Environment Configuration:**
-   Create a `.env` file in the root directory:
-   ```env
-   # Development Database
-   DEV_DATABASE_URL=postgresql://username:password@localhost:5432/server_panda_dev
-   
-   # Production Database (for Fly.io)
-   DATABASE_URL=postgresql://username:password@host:5432/server_panda_prod
-   
-   # Server Configuration
-   PORT=3001
-   NODE_ENV=development
-   ```
+If you're using the hosted database on Fly.io for development, you'll need to proxy the connection:
 
-3. **Database Setup:**
-   
-   **Option A: Local PostgreSQL Database**
-   ```bash
-   # Generate database migrations
-   yarn drizzle-kit generate
-   
-   # Run migrations
-   yarn drizzle-kit migrate
-   ```
-   
-   **Option B: Using Fly.io Hosted Database (Recommended for Development)**
-   
-   If you're using the hosted database on Fly.io for development, you'll need to proxy the connection:
-   
-   ```bash
-   # Start the database proxy (run this in a separate terminal)
-   flyctl proxy 5432 -a database-panda-dev
-   
-   # In your .env file, use:
-   # DEV_DATABASE_URL=postgresql://username:password@localhost:5432/database_name
-   
-   # Then run migrations
-   yarn drizzle-kit generate
-   yarn drizzle-kit migrate
-   ```
-   
-   **Important:** Keep the proxy running in a separate terminal window while developing. The proxy forwards your local port 5432 to the remote Fly.io database.
+```bash
+# Start the database proxy (run this in a separate terminal)
+flyctl proxy 5432 -a database-panda-dev
+
+# In your .env file, use:
+# DEV_DATABASE_URL=postgres://postgres:your_password@127.0.0.1:5432/postgres
+```
+
+> **Important:** Keep the proxy running in a separate terminal window while developing. The proxy forwards your local port 5432 to the remote Fly.io database.
 
 ### Development Commands
 
@@ -109,11 +86,13 @@ yarn tsc --noEmit
 ### Health Checks
 
 - **GET /** - Basic server response
+
   ```
   Response: "Hello from server"
   ```
 
 - **GET /health** - Application health status
+
   ```json
   {
     "status": "OK",
@@ -128,28 +107,6 @@ yarn tsc --noEmit
     "timestamp": "2025-06-07T17:27:31.244Z"
   }
   ```
-
-## Database
-
-### Configuration
-
-The application uses Drizzle ORM with PostgreSQL. Database configuration automatically switches between development and production based on `NODE_ENV`.
-
-- **Development:** Uses `DEV_DATABASE_URL`
-- **Production:** Uses `DATABASE_URL`
-
-### Schema Management
-
-```bash
-# Generate new migration
-yarn drizzle-kit generate
-
-# Apply migrations
-yarn drizzle-kit migrate
-
-# View database in Drizzle Studio
-yarn drizzle-kit studio
-```
 
 ## Deployment
 
@@ -184,16 +141,6 @@ fly auth login
 fly deploy
 ```
 
-### Docker
-
-```bash
-# Build locally
-docker build -t server-panda .
-
-# Run container
-docker run -p 3001:3001 server-panda
-```
-
 ## Project Structure
 
 ```
@@ -212,50 +159,42 @@ server-panda/
 └── README.md              # This file
 ```
 
-## Development History
-
-This project was built iteratively with the following key milestones:
-
-- ✅ **Initial Setup:** Express.js server with TypeScript, Docker, and Fly.io deployment
-- ✅ **Development Tools:** Migrated from ts-node-dev to tsx for better DX
-- ✅ **Database Integration:** Extracted database config with Drizzle ORM
-- ✅ **Build Optimization:** Updated dependencies and build configuration
-- ✅ **Repository Hygiene:** Enhanced .gitignore and cleaned up tracked files
-- ✅ **Production Ready:** Improved deployment setup and network configuration
-- ✅ **Error Handling:** Fixed TypeScript compilation and PORT variable issues
-- ✅ **Smart Deployment:** Implemented intelligent cache management for deployments
 
 ## Configuration Files
 
 ### TypeScript (`tsconfig.json`)
+
 - ES2022 target with Node22 lib
 - ESNext modules with node resolution
 - Strict type checking enabled
 
 ### ESLint (`eslint.config.mjs`)
+
 - TypeScript ESLint integration
 - Stylistic rules for consistent code formatting
 
 ### Environment Variables
 
-| Variable | Description | Required |
-|----------|-------------|----------|
+| Variable           | Description                       | Required    |
+| ------------------ | --------------------------------- | ----------- |
 | `DEV_DATABASE_URL` | Development PostgreSQL connection | Development |
-| `DATABASE_URL` | Production PostgreSQL connection | Production |
-| `PORT` | Server port (default: 3001) | No |
-| `NODE_ENV` | Environment mode | No |
+| `DATABASE_URL`     | Production PostgreSQL connection  | Production  |
+| `PORT`             | Server port (default: 3001)       | No          |
+| `NODE_ENV`         | Environment mode                  | No          |
 
 ## Troubleshooting
 
 ### Common Issues
 
 1. **Database Connection Failed**
+
    - Verify database URLs in `.env`
    - Check database server is running (or Fly.io proxy if using hosted DB)
    - For Fly.io database: Ensure `flyctl proxy 5432 -a database-panda-dev` is running
    - Test connection: `yarn dev` and visit `/db-health`
 
 2. **TypeScript Compilation Errors**
+
    - Run `yarn tsc` to see detailed errors
    - Check `tsconfig.json` configuration
    - Ensure all dependencies are installed
@@ -265,13 +204,6 @@ This project was built iteratively with the following key milestones:
    - Check Fly.io logs: `fly logs`
    - Verify environment variables: `fly secrets list`
 
-### Debugging
-
-The application includes comprehensive logging:
-- Database connection status on startup
-- Health check endpoints for monitoring
-- Error logging for database operations
-
 ## Contributing
 
 1. Follow the existing code style (ESLint configured)
@@ -279,10 +211,6 @@ The application includes comprehensive logging:
 3. Update this README for significant changes
 4. Use meaningful commit messages
 
-## License
-
-ISC License - see package.json for details
-
 ---
 
-Built with ❤️ using Express.js, TypeScript, and Fly.io
+Built with ❤️ using Express.js, TypeScript, PostgreSQL, and Fly.io
