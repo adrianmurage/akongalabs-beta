@@ -1,14 +1,18 @@
 import { Flex, Text } from "@radix-ui/themes";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import styles from "./App.module.css";
 import ThemeChanger from "./components/theme-changer/ThemeChanger";
+import api from "./lib/api";
 
 function App() {
-  const { data: backendData, isLoading: loading, error } = useQuery({
-    queryKey: ['backend-data'],
+  const {
+    data: backendData,
+    isLoading: loading,
+    error,
+  } = useQuery({
+    queryKey: ["backend-data"],
     queryFn: async () => {
-      const response = await axios.get("http://localhost:3001/");
+      const response = await api.get("/hello");
       return response.data;
     },
   });
@@ -21,7 +25,7 @@ function App() {
       gap="3"
       className={styles.container}
     >
-      <Text>Hello from Radix Themes :)</Text>
+      <Text>Hello from Working Panda 🐼 :)</Text>
       {loading ? (
         <Text>Loading...</Text>
       ) : error ? (
