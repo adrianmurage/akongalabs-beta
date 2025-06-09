@@ -12,7 +12,28 @@ jobs:
     concurrency: deploy-group    # optional: ensure only one action runs at a time
     steps:
       - uses: actions/checkout@v4
+        with:
+          path: server-panda
+      - uses: actions/checkout@v4
+        with:
+          repository: Adrian-corp/a-working-panda
+          path: a-working-panda
+          token: ${{ secrets.PAT_TOKEN }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'yarn'
+      - name: Install server dependencies
+        working-directory: server-panda
+        run: yarn install --frozen-lockfile
+      - name: Install UI dependencies
+        working-directory: a-working-panda
+        run: yarn install --frozen-lockfile
+      - name: Build UI
+        working-directory: server-panda
+        run: yarn build:ui
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - run: flyctl deploy --remote-only --build-arg CACHE_BUST=${{ github.sha }}
+        working-directory: server-panda
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}

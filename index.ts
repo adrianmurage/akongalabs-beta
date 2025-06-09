@@ -1,17 +1,18 @@
 import "dotenv/config";
 import express from "express";
 import { isDatabaseConfigured, testDatabaseConnection } from "./src/db.js";
-import cors from 'cors';
 const app = express();
-const PORT = parseInt(process.env.PORT || '3001', 10);
+const router = express.Router();
+const PORT = parseInt(process.env.PORT || "3001", 10);
 
 // Middleware
-app.use(cors());
+app.use("/api", router);
+app.use(express.static("dist"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Health check db route
-app.get("/db-health", (_req, res) => {
+router.get("/db-health", (_req, res) => {
   if (!isDatabaseConfigured()) {
     res.status(503).json({
       error: "Database not configured",
@@ -37,12 +38,12 @@ app.get("/db-health", (_req, res) => {
 });
 
 // A route that returns the text "Hello from server"
-app.get("/", (_req, res) => {
+router.get("/hello", (_req, res) => {
   res.send("Hello from server");
 });
 
 // Health check route
-app.get("/health", (_req, res) => {
+router.get("/health", (_req, res) => {
   res.json({ status: "OK", timestamp: new Date().toISOString() });
 });
 
