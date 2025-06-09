@@ -1,4 +1,5 @@
 # See https://fly.io/docs/app-guides/continuous-deployment-with-github-actions/
+# Updated to build UI from separate repository
 
 name: Fly Deploy
 on:
@@ -10,6 +11,7 @@ jobs:
     name: Deploy app
     runs-on: ubuntu-latest
     concurrency: deploy-group    # optional: ensure only one action runs at a time
+
     steps:
       - uses: actions/checkout@v4
         with:
