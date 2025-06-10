@@ -13,10 +13,12 @@ app.use(express.urlencoded({ extended: true }));
 
 // Health check db route
 router.get("/db-health", (_req, res) => {
+  const isProduction = process.env.NODE_ENV === "production";
+
   if (!isDatabaseConfigured()) {
     res.status(503).json({
       error: "Database not configured",
-      message: "Database URL environment variable is not set",
+      message: `${isProduction ? "DATABASE_URL env variable not set" : "DEV_DATABASE_URL env variable not set"}`,
       timestamp: new Date().toISOString(),
     });
     return;

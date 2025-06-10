@@ -60,7 +60,7 @@ If you're using the hosted database on Fly.io for development, you'll need to pr
 flyctl proxy 5432 -a database-panda-dev
 
 # In your .env file, use:
-# DEV_DATABASE_URL=postgres://postgres:your_password@127.0.0.1:5432/postgres
+# DEV_DATABASE_URL=postgres://postgres:your_password@0.0.0.0:5432/postgres
 ```
 
 > **Important:** Keep the proxy running in a separate terminal window while developing. The proxy forwards your local port 5432 to the remote Fly.io database.
