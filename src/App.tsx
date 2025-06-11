@@ -1,22 +1,11 @@
-import { Flex, Text } from "@radix-ui/themes";
+import { Flex, Text, Button } from "@radix-ui/themes";
 import { useQuery } from "@tanstack/react-query";
+import { Link } from "react-router";
 import styles from "./App.module.css";
 import ThemeChanger from "./components/theme-changer/ThemeChanger";
 import api from "./lib/api";
 
 function App() {
-  const currentPath = window.location.pathname;
-  
-  // Route to different components based on path
-  if (currentPath.startsWith('/app')) {
-    return <ReactApp />;
-  }
-  
-  // Default to landing page for root route
-  return <LandingPage />;
-}
-
-function ReactApp() {
   const {
     data: backendData,
     isLoading: loading,
@@ -38,7 +27,7 @@ function ReactApp() {
       className={styles.container}
     >
       <Text>Hello from Working Panda 🐼 :)</Text>
-      <Text>You're in the React App (/app/*)</Text>
+      <Text>You're in the React App!</Text>
       {loading ? (
         <Text>Loading...</Text>
       ) : error ? (
@@ -46,32 +35,17 @@ function ReactApp() {
       ) : (
         <Text>{backendData}</Text>
       )}
+      
+      <Flex gap="2">
+        <Button asChild>
+          <Link to="/stats">Go to Stats</Link>
+        </Button>
+        <Button variant="outline" asChild>
+          <a href="/">Back to Home</a>
+        </Button>
+      </Flex>
+      
       <ThemeChanger />
-    </Flex>
-  );
-}
-
-function LandingPage() {
-  return (
-    <Flex
-      direction="column"
-      justify="center"
-      align="center"
-      gap="3"
-      className={styles.container}
-    >
-      <Text size="8">🐼 Welcome to Working Panda</Text>
-      <Text>This is the landing page served at the root route.</Text>
-      <Text>
-        <a href="/app" style={{ color: '#007bff', textDecoration: 'none' }}>
-          Go to the React App
-        </a>
-      </Text>
-      <Text>
-        <a href="/api/health" style={{ color: '#007bff', textDecoration: 'none' }}>
-          Check API Health
-        </a>
-      </Text>
     </Flex>
   );
 }
