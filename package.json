@@ -4,7 +4,7 @@
   "main": "index.ts",
   "type": "module",
   "scripts": {
-    "build:ui": "rm -rf a-working-panda/dist ../landing-panda/dist && (cd ../a-working-panda && yarn build && mkdir -p ../server-panda/a-working-panda && cp -r dist ../server-panda/a-working-panda/) && (cd ../landing-panda && yarn build && mkdir -p ../server-panda/landing-panda && cp -r dist ../server-panda/landing-panda/)",
+    "build:ui": "rm -rf a-working-panda/dist ../landing-panda/dist && (cd ../a-working-panda && yarn build --base=/app/ && mkdir -p ../server-panda/a-working-panda && cp -r dist ../server-panda/a-working-panda/) && (cd ../landing-panda && yarn build && mkdir -p ../server-panda/landing-panda && cp -r dist ../server-panda/landing-panda/)",
     "deploy:dev": "fly deploy --app server-panda-dev",
     "deploy:dev-full": "yarn build:ui && yarn deploy:dev",
     "logs:prod": "fly logs",
