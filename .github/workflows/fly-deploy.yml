@@ -28,11 +28,15 @@ jobs:
           cache-dependency-path: |
             server-panda/yarn.lock
             a-working-panda/yarn.lock
+            server-panda/landing-panda/yarn.lock
       - name: Install server dependencies
         working-directory: server-panda
         run: yarn install --frozen-lockfile
       - name: Install UI dependencies
         working-directory: a-working-panda
+        run: yarn install --frozen-lockfile
+      - name: Install landing page dependencies
+        working-directory: server-panda/landing-panda
         run: yarn install --frozen-lockfile
       - name: Build UI
         working-directory: server-panda

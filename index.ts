@@ -4,7 +4,7 @@ import path from "path";
 import { createProxyMiddleware } from "http-proxy-middleware";
 import { isDatabaseConfigured, testDatabaseConnection } from "./src/db.js";
 const app = express();
-const router = express.Router();
+
 const PORT = parseInt(process.env.PORT || "3001", 10);
 
 // Middleware
@@ -106,7 +106,7 @@ if (!isDevelopment) {
    * @param {string} path - Any path after /app/
    * @returns {File} 200 - React SPA index.html file
    */
-  app.get("/app/*", (_req, res) => {
+  app.get("/app/*splat", (_req, res) => {
     res.sendFile(path.join(process.cwd(), "a-working-panda/dist", "index.html"));
   });
 
@@ -127,7 +127,7 @@ app.use("/", express.static("landing-panda/dist"));
  * @param {string} catchall - Any non-API route path
  * @returns {File} 200 - Astro static site files
  */
-app.get("/*catchall", (_req, res) => {
+app.get("/*splat", (_req, res) => {
   res.sendFile(path.join(process.cwd(), "landing-panda/dist", "index.html"));
 });
 // END ASTRO STATIC ROUTES
