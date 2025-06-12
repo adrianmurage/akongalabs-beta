@@ -1,0 +1,40 @@
+=== REPOSITORY STATE DOCUMENTATION ===
+
+=== a-working-panda ===
+Branches:
+* main
+  remotes/origin/main
+Remotes:
+origin	git@github.com:Adrian-corp/a-working-panda.git (fetch)
+origin	git@github.com:Adrian-corp/a-working-panda.git (push)
+Recent commits:
+b17c7cc feat: implement client-side routing with React Router
+e50924e feat: add basic routing for / and /app/** paths
+6bd68a9 Add API configuration and update app structure
+7380d57 fix: resolve TypeScript build errors with Radix UI themes
+4aa725b Simplify .gitignore to essential patterns only
+
+=== landing-panda ===
+Branches:
+* main
+  remotes/origin/main
+Remotes:
+origin	git@github.com:Adrian-corp/landing-panda.git (fetch)
+origin	git@github.com:Adrian-corp/landing-panda.git (push)
+Recent commits:
+589a9a1 feat: set up Astro landing site with multi-page navigation
+d1ec1cf Initial commit from Astro
+
+=== server-panda ===
+Branches:
+* main
+  remotes/origin/main
+Remotes:
+origin	git@github.com:Adrian-corp/server-panda.git (fetch)
+origin	git@github.com:Adrian-corp/server-panda.git (push)
+Recent commits:
+f56e401 fix: revert build command, use proper Vite config for base path
+5e80cff fix: configure Vite base path for React app deployment
+7a0ccdf refactor: modularize Express server architecture
+3e13136 Update GitHub Actions Node.js version to match Dockerfile
+3b0d262 Fix GitHub Actions: Add landing-panda repository checkout
