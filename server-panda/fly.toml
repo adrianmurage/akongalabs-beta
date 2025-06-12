@@ -1,0 +1,25 @@
+# fly.toml app configuration file generated for server-panda-dev on 2025-06-07T19:39:42+03:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'server-panda-dev'
+primary_region = 'jnb'
+
+[build]
+
+[env]
+  PORT = "3001"
+  
+[http_service]
+  internal_port = 3001
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+[[vm]]
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1

@@ -1,0 +1,41 @@
+{
+  "name": "server-panda",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "type": "module",
+  "scripts": {
+    "build:ui": "rm -rf a-working-panda/dist ../landing-panda/dist && (cd ../a-working-panda && yarn build && mkdir -p ../server-panda/a-working-panda && cp -r dist ../server-panda/a-working-panda/) && (cd ../landing-panda && yarn build && mkdir -p ../server-panda/landing-panda && cp -r dist ../server-panda/landing-panda/)",
+    "deploy:dev": "fly deploy --app server-panda-dev",
+    "deploy:dev-full": "yarn build:ui && yarn deploy:dev",
+    "logs:prod": "fly logs",
+    "logs:dev": "fly logs --app server-panda-dev",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "tsc": "tsc",
+    "dev": "tsx watch index.ts",
+    "lint": "eslint"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@eslint/js": "^9.28.0",
+    "@flydotio/dockerfile": "^0.7.10",
+    "@stylistic/eslint-plugin": "^4.4.1",
+    "@types/cors": "^2.8.19",
+    "@types/eslint__js": "^9.14.0",
+    "@types/express": "^5.0.3",
+    "@types/pg": "^8.15.4",
+    "drizzle-kit": "^0.31.1",
+    "eslint": "^9.28.0",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.33.1"
+  },
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "drizzle-orm": "^0.44.2",
+    "express": "^5.1.0",
+    "http-proxy-middleware": "^3.0.5",
+    "pg": "^8.16.0"
+  }
+}
