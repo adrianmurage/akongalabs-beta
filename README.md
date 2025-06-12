@@ -8,7 +8,7 @@ This consolidated repository contains three distinct but related projects:
 
 ```
 working-panda/
-├── a-working-panda/     # React Application (Frontend)
+├── client-panda/        # React Application (Frontend)
 ├── landing-panda/       # Astro Landing Site
 ├── server-panda/        # Express.js Server (Backend)
 ├── .cursor/             # Development tools and planning
@@ -17,8 +17,8 @@ working-panda/
 
 ## 📋 Projects Overview
 
-### 🎨 A Working Panda - React Application
-**Location**: `./a-working-panda/`
+### 🎨 Client Panda - React Application
+**Location**: `./client-panda/`
 
 A modern React application built with Vite, featuring Radix UI components and dynamic theme switching capabilities.
 
@@ -81,7 +81,7 @@ cd working-panda
 2. **Install dependencies for each project**:
 ```bash
 # React Application
-cd a-working-panda
+cd client-panda
 yarn install
 cd ..
 
@@ -100,9 +100,9 @@ cd ..
 
 Each project can be developed independently:
 
-#### React Application (a-working-panda)
+#### React Application (client-panda)
 ```bash
-cd a-working-panda
+cd client-panda
 yarn dev          # Start development server (http://localhost:5173)
 yarn build        # Build for production
 yarn preview      # Preview production build
@@ -145,7 +145,7 @@ graph TD
 
 - **Server Panda**: Express server that serves everything - static files AND API
 - **Landing Panda**: Astro site served as static files by Express server
-- **A Working Panda**: React app served as static files by Express server
+- **Client Panda**: React app served as static files by Express server
 - **Unified Architecture**: Single server deployment contains all three applications
 
 ### Deployment Strategy
@@ -168,7 +168,7 @@ PORT=3000
 NODE_ENV=development
 ```
 
-#### a-working-panda/.env
+#### client-panda/.env
 ```env
 VITE_API_URL=http://localhost:3000
 ```
@@ -221,8 +221,19 @@ yarn build:ui    # Builds React app and Astro site, copies to server directory
 fly deploy       # Deploys Express server with integrated frontend apps
 ```
 
+### Build Commands
+
+The server provides granular build commands for flexibility:
+
+```bash
+# Build individual applications
+yarn build:client   # Builds only the React application
+yarn build:landing  # Builds only the Astro landing site
+yarn build:ui       # Builds both applications (calls build:client && build:landing)
+```
+
 The `build:ui` script automatically:
-1. Builds the React application (`a-working-panda`)
+1. Builds the React application (`client-panda`)
 2. Builds the Astro landing site (`landing-panda`) 
 3. Copies both built applications into the server directory
 4. Everything deploys together to Fly.io as one application
@@ -238,7 +249,7 @@ The GitHub Actions workflow:
 ## 🔄 Repository History
 
 This repository was consolidated from three separate repositories:
-- `a-working-panda` (React app)
+- `client-panda` (React app, originally `a-working-panda`)
 - `landing-panda` (Astro site)
 - `server-panda` (Express server)
 

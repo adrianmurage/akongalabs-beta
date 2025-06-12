@@ -9,7 +9,7 @@ This directory contains GitHub Actions workflows for the consolidated Working Pa
 A unified CI/CD pipeline that builds all projects and deploys them together as a single application to Fly.io:
 
 - **server-panda** (Express.js server that serves everything)
-- **a-working-panda** (React app integrated into server)
+- **client-panda** (React app integrated into server)
 - **landing-panda** (Astro site integrated into server)
 
 **Architecture**: All applications are served by the Express server in production, deployed as one unit to Fly.io.
@@ -91,12 +91,12 @@ You can test individual components locally:
 ```bash
 # Test builds locally
 cd server-panda && yarn build
-cd ../a-working-panda && yarn build
+cd ../client-panda && yarn build
 cd ../landing-panda && yarn build
 
 # Test linting
 cd server-panda && yarn lint
-cd ../a-working-panda && yarn lint
+cd ../client-panda && yarn lint
 ```
 
 ### Branch Testing

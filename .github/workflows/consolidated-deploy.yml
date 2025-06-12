@@ -26,7 +26,7 @@ jobs:
           cache: "yarn"
           cache-dependency-path: |
             server-panda/yarn.lock
-            a-working-panda/yarn.lock
+            client-panda/yarn.lock
             landing-panda/yarn.lock
 
       - name: Install server dependencies
@@ -34,7 +34,7 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: Install React app dependencies
-        working-directory: a-working-panda
+        working-directory: client-panda
         run: yarn install --frozen-lockfile
 
       - name: Install landing site dependencies
@@ -46,7 +46,7 @@ jobs:
         run: yarn lint || echo "Linting completed with warnings"
 
       - name: Lint React app
-        working-directory: a-working-panda
+        working-directory: client-panda
         run: yarn lint || echo "Linting completed with warnings"
 
       - name: Test server build
@@ -54,7 +54,7 @@ jobs:
         run: yarn tsc --noEmit
 
       - name: Test React app build
-        working-directory: a-working-panda
+        working-directory: client-panda
         run: yarn build
 
       - name: Test landing site build
@@ -79,7 +79,7 @@ jobs:
           cache: "yarn"
           cache-dependency-path: |
             server-panda/yarn.lock
-            a-working-panda/yarn.lock
+            client-panda/yarn.lock
             landing-panda/yarn.lock
 
       - name: Install server dependencies
@@ -87,7 +87,7 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: Install React app dependencies
-        working-directory: a-working-panda
+        working-directory: client-panda
         run: yarn install --frozen-lockfile
 
       - name: Install landing site dependencies

@@ -1,6 +1,6 @@
 # ===============================================
 # CONSOLIDATED REPOSITORY .gitignore
-# Covers: server-panda (Express), a-working-panda (React), landing-panda (Astro)
+# Covers: server-panda (Express), client-panda (React), landing-panda (Astro)
 # ===============================================
 
 # ===============================================
@@ -122,8 +122,8 @@ server-panda/build/
 server-panda/.serverless/
 
 # React app specific
-a-working-panda/dist/
-a-working-panda/build/
+client-panda/dist/
+client-panda/build/
 
 # Astro specific
 landing-panda/dist/

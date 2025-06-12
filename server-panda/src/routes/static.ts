@@ -8,19 +8,25 @@ import path from "path";
 export function setupReactAppRoutes(app: Application): void {
   // Serve static assets (CSS, JS, images) for React app with base path
   // This must come BEFORE the SPA route handlers to ensure assets are served correctly
-  app.use("/app", express.static("a-working-panda/dist", {
-    // Handle trailing slashes properly
-    index: false,
-    redirect: false,
-    // Set proper MIME types for assets
-    setHeaders: (res: Response, filePath: string) => {
-      if (filePath.indexOf('.js') === filePath.length - 3) {
-        res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
-      } else if (filePath.indexOf('.css') === filePath.length - 4) {
-        res.setHeader('Content-Type', 'text/css; charset=utf-8');
-      }
-    }
-  }));
+  app.use(
+    "/app",
+    express.static("client-panda/dist", {
+      // Handle trailing slashes properly
+      index: false,
+      redirect: false,
+      // Set proper MIME types for assets
+      setHeaders: (res: Response, filePath: string) => {
+        if (filePath.indexOf(".js") === filePath.length - 3) {
+          res.setHeader(
+            "Content-Type",
+            "application/javascript; charset=utf-8",
+          );
+        } else if (filePath.indexOf(".css") === filePath.length - 4) {
+          res.setHeader("Content-Type", "text/css; charset=utf-8");
+        }
+      },
+    }),
+  );
 
   /**
    * Serve React SPA for all /app/** routes that aren't static assets
@@ -30,12 +36,12 @@ export function setupReactAppRoutes(app: Application): void {
    * @returns {File} 200 - React SPA index.html file
    */
   app.get("/app/*splat", (_req: Request, res: Response) => {
-    res.sendFile(path.join(process.cwd(), "a-working-panda/dist", "index.html"));
+    res.sendFile(path.join(process.cwd(), "client-panda/dist", "index.html"));
   });
 
   // Handle /app route (no trailing slash)
   app.get("/app", (_req: Request, res: Response) => {
-    res.sendFile(path.join(process.cwd(), "a-working-panda/dist", "index.html"));
+    res.sendFile(path.join(process.cwd(), "client-panda/dist", "index.html"));
   });
 }
 
