@@ -97,14 +97,15 @@ Each repository has its own git history and commit structure. The goal is to pre
 ## Project Status Board
 
 ### To Do
-- [ ] Task 1.1: Update client-panda/package.json name field
-- [ ] Task 1.2: Remove orphaned server-panda/a-working-panda/ directory
-- [ ] Task 1.3: Clean up legacy workflow file
-- [ ] Task 2.1: Fix README.md documentation links
-- [ ] Task 2.2: Update client-panda/README.md setup instructions
-- [ ] Task 2.3: Clean historical references in scratchpad (optional)
-- [ ] Task 3.1: Comprehensive reference audit
-- [ ] Task 3.2: Test all functionality with cleaned references
+- [ ] Task 1.1: Add multi-stage build for frontend applications  
+- [ ] Task 1.2: Integrate consolidated build process
+- [ ] Task 1.3: Optimize build stages and dependencies
+- [ ] Task 2.1: Review and update app configuration for production
+- [ ] Task 2.2: Verify resource allocation for consolidated app
+- [ ] Task 2.3: Update build and deployment settings
+- [ ] Task 3.1: Test Docker build with consolidated structure
+- [ ] Task 3.2: Verify Fly.io deployment compatibility
+- [ ] Task 3.3: Test production deployment workflow
 
 ### In Progress
 - None
@@ -144,28 +145,38 @@ Each repository has its own git history and commit structure. The goal is to pre
 - [x] Task 4.1: Test individual build commands
 - [x] Task 4.2: Test full development workflow
 - [x] Task 4.3: Test deployment workflow
+- [x] Task 1.1: Update client-panda/package.json name field
+- [x] Task 1.2: Remove orphaned server-panda/a-working-panda/ directory
+- [x] Task 1.3: Clean up legacy workflow file
+- [x] Task 2.1: Fix README.md documentation links
+- [x] Task 2.2: Update client-panda/README.md setup instructions
+- [x] Task 2.3: Clean historical references in scratchpad (optional)
+- [x] Task 3.1: Comprehensive reference audit
+- [x] Task 3.2: Test all functionality with cleaned references
 
 ## Current Status / Progress Tracking
 
-**Current Phase**: Phase 7 - Reference Cleanup In Progress
-**Next Phase**: Final verification and testing
+**Current Phase**: Deployment Configuration Audit Required - Dockerfile & Fly.toml
+**Next Phase**: Phase 8 - Deployment Configuration Enhancement
 
 **Repository Consolidation Summary**:
 - ✅ All 3 repositories successfully merged with history preserved
 - ✅ server-panda: Express server integrated (commit: cd89548)
-- ✅ client-panda: React app integrated and renamed (commit: fe63043, rename: 003a222, cleanup: in progress)
+- ✅ client-panda: React app integrated and renamed (commit: fe63043, rename: 003a222, cleanup: cfc11b8)
 - ✅ landing-panda: Astro site integrated (commit: 73f8a4c)
 - ✅ Root level: Unified git repository with complete history
 - ✅ Configuration: Comprehensive .gitignore, README, and CI/CD setup
 - ✅ CI/CD Architecture Fix: Corrected deployment model to match unified architecture
 - ✅ Build System Enhancement: Granular build commands and directory rename
-- ✅ Final enhancement commit: 5fdd12d
+- ✅ Reference Cleanup: All functional a-working-panda references removed
+- ✅ Final cleanup commit: cfc11b8
+- ⚠️ Deployment Config: Dockerfile and fly.toml need audit for consolidated structure
 
-**🔧 CLEANUP IN PROGRESS**: Repository consolidation with enhanced build system complete, actively cleaning remaining references!
+**🔧 DEPLOYMENT AUDIT REQUIRED**: Repository consolidation complete, but deployment configurations need enhancement for unified architecture!
 
 ## Executor's Feedback or Assistance Requests
 
-**🎉 COMPLETE SUCCESS**: Repository consolidation, CI/CD pipeline, and build system enhancements all successful!
+**🎉 COMPLETE SUCCESS**: Repository consolidation, CI/CD pipeline, build system enhancements, and reference cleanup all successful!
 
 **Final Execution Results**:
 - ✅ Used `git subtree add` successfully for all 3 repositories
@@ -178,9 +189,89 @@ Each repository has its own git history and commit structure. The goal is to pre
 - ✅ Fixed CI/CD pipeline to match unified deployment architecture
 - ✅ Enhanced build system with granular commands (build:client, build:landing)
 - ✅ Renamed React app directory to client-panda for better clarity
+- ✅ Comprehensive reference cleanup removing all functional a-working-panda references
 - ✅ Full testing and verification completed for all enhancements
 
-**Cleanup Phase Active**: CI/CD pipeline and build system ready, comprehensive reference cleanup in progress!
+**Deployment Config Audit**: CI/CD pipeline and build system ready, but Dockerfile and fly.toml need enhancement for production deployment!
+
+## DEPLOYMENT CONFIGURATION AUDIT REQUIRED - DOCKERFILE & FLY.TOML
+
+### Problem Analysis
+The user has requested an audit of Dockerfile and fly.toml to ensure they align with the new consolidated repository structure and client-panda naming. These deployment configuration files are critical for production deployment success.
+
+### Current Configuration Analysis
+
+#### Dockerfile Issues Identified
+1. **Missing Frontend Build Integration**: Dockerfile only builds TypeScript server (`yarn tsc`) but doesn't include frontend apps
+2. **No UI Build Step**: Missing `yarn build:ui` or granular build commands 
+3. **Static File Serving Gap**: Container won't have client-panda/dist and landing-panda/dist directories
+4. **Deployment Architecture Mismatch**: Dockerfile doesn't reflect unified deployment model
+
+#### Fly.toml Configuration Status
+1. **Basic Configuration**: Standard Fly.io configuration with correct ports
+2. **App Name**: Currently "server-panda-dev" (development-focused)
+3. **Resource Allocation**: 1GB memory, shared CPU appropriate for current needs
+4. **Missing Build Context**: No specific build configuration for consolidated structure
+
+#### Build Process Gaps
+1. **Missing Dependencies**: Frontend apps (client-panda, landing-panda) not included in Docker build
+2. **Build Sequence**: No coordination between TypeScript compilation and frontend builds
+3. **Static Assets**: Built frontend assets not copied into Docker image
+4. **Production Mismatch**: Container build process doesn't match local `build:ui` workflow
+
+### Detailed Task Breakdown
+
+#### Phase 1: Dockerfile Enhancement
+- [ ] **Task 1.1**: Add multi-stage build for frontend applications
+  - Success Criteria: Dockerfile builds client-panda and landing-panda during image creation
+  - Verification: Docker build process includes frontend build steps
+
+- [ ] **Task 1.2**: Integrate consolidated build process
+  - Success Criteria: Dockerfile uses `yarn build:ui` or equivalent granular commands
+  - Verification: Built image contains client-panda/dist and landing-panda/dist directories
+
+- [ ] **Task 1.3**: Optimize build stages and dependencies
+  - Success Criteria: Efficient multi-stage build minimizing final image size
+  - Verification: Docker build completes successfully with all static assets
+
+#### Phase 2: Fly.toml Configuration Review
+- [ ] **Task 2.1**: Review and update app configuration for production
+  - Success Criteria: Fly.toml reflects production-ready settings
+  - Verification: Configuration supports unified deployment model
+
+- [ ] **Task 2.2**: Verify resource allocation for consolidated app
+  - Success Criteria: Memory and CPU settings appropriate for serving all three apps
+  - Verification: Resource settings match expected load
+
+- [ ] **Task 2.3**: Update build and deployment settings
+  - Success Criteria: Fly.toml optimized for new Docker build process
+  - Verification: Deployment process works with enhanced Dockerfile
+
+#### Phase 3: Integration Testing
+- [ ] **Task 3.1**: Test Docker build with consolidated structure
+  - Success Criteria: Docker image builds successfully with all applications
+  - Verification: Built image serves React app, Astro site, and API correctly
+
+- [ ] **Task 3.2**: Verify Fly.io deployment compatibility
+  - Success Criteria: Enhanced configuration deploys successfully to Fly.io
+  - Verification: All applications accessible through deployed instance
+
+- [ ] **Task 3.3**: Test production deployment workflow
+  - Success Criteria: Full CI/CD → Docker build → Fly.io deployment works end-to-end
+  - Verification: Deployed application serves all three projects correctly
+
+### Impact Assessment
+**Critical**: Dockerfile missing frontend builds will cause deployment failures
+**Important**: Resource allocation may need adjustment for unified app
+**Medium**: Build optimization affects deployment speed and image size
+
+### Success Criteria for Deployment Audit
+- ✅ Dockerfile includes frontend build steps (client-panda, landing-panda)
+- ✅ Docker image contains all necessary static assets for unified serving
+- ✅ Fly.toml configuration optimized for consolidated application
+- ✅ Build process matches local development workflow (build:ui functionality)
+- ✅ End-to-end deployment tested and working
+- ✅ All three applications (server, client, landing) accessible in production
 
 ## REFERENCE CLEANUP REQUIRED - REMAINING A-WORKING-PANDA REFERENCES
 
@@ -251,6 +342,8 @@ Despite successful directory rename and main configuration updates, comprehensiv
 - ✅ Legacy workflow files removed or updated
 - ✅ Comprehensive grep audit shows only backup references remain
 - ✅ Full development and deployment workflow tested and working
+
+**CLEANUP PHASE COMPLETE**: All functional references cleaned, only intentional historical documentation remains!
 
 ## NEW ENHANCEMENT REQUEST - BUILD COMMANDS SEPARATION & DIRECTORY RENAME
 

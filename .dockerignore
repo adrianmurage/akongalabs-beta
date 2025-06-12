@@ -1,0 +1,146 @@
+# ===============================================
+# UNIFIED DOCKER IGNORE - Working Panda Repository
+# Covers: server-panda (Express), client-panda (React), landing-panda (Astro)
+# ===============================================
+
+# ===============================================
+# Node.js Dependencies & Package Managers
+# ===============================================
+**/node_modules/
+**/jspm_packages/
+**/.pnp.*
+**/.yarn/cache
+**/.yarn/unplugged
+**/.yarn/build-state.yml
+**/.yarn/install-state.gz
+
+# ===============================================
+# Build Outputs & Distribution (Exclude from Docker)
+# ===============================================
+# These will be built inside Docker
+**/dist/
+**/build/
+**/.next/
+**/.nuxt/
+**/.astro/
+**/.vite/
+**/.parcel-cache/
+**/.cache/
+**/*.tsbuildinfo
+
+# ===============================================
+# Logs & Debug Files
+# ===============================================
+**/*.log
+**/logs/
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
+**/pnpm-debug.log*
+**/lerna-debug.log*
+**/.pnpm-debug.log*
+
+# ===============================================
+# Environment Variables & Configuration
+# ===============================================
+**/.env
+**/.env.local
+**/.env.development.local
+**/.env.test.local
+**/.env.production.local
+**/.env.staging
+**/.env.*.local
+
+# ===============================================
+# Testing & Coverage
+# ===============================================
+**/coverage/
+**/.nyc_output/
+**/*.lcov
+**/.jest/
+
+# ===============================================
+# IDE & Editor Files
+# ===============================================
+**/.vscode/*
+!**/.vscode/extensions.json
+**/.idea/
+**/*.swp
+**/*.swo
+**/*~
+**/*.sublime-project
+**/*.sublime-workspace
+
+# ===============================================
+# OS Generated Files
+# ===============================================
+**/.DS_Store
+**/.DS_Store?
+**/._*
+**/.Spotlight-V100
+**/.Trashes
+**/ehthumbs.db
+**/Thumbs.db
+**/desktop.ini
+
+# ===============================================
+# Temporary Files
+# ===============================================
+**/tmp/
+**/temp/
+**/*.tmp
+**/*.temp
+**/.grunt/
+
+# ===============================================
+# Optional Caches
+# ===============================================
+**/.npm/
+**/.eslintcache
+**/.stylelintcache
+**/.rpt2_cache/
+**/.rts2_cache_cjs/
+**/.rts2_cache_es/
+**/.rts2_cache_umd/
+
+# ===============================================
+# Repository Management Files (Exclude from Docker)
+# ===============================================
+.git/
+.github/
+.cursor/
+.backups/
+README.md
+repo-states.txt
+verification.txt
+.cursorrules
+
+# ===============================================
+# Docker Files (Don't copy into container)
+# ===============================================
+Dockerfile*
+.dockerignore
+docker-compose*
+
+# ===============================================
+# Development & Testing (Exclude from Production)
+# ===============================================
+**/.vscode-test
+**/lib-cov
+**/coverage
+**/test/
+**/tests/
+**/__tests__/
+**/*.test.*
+**/*.spec.*
+
+# ===============================================
+# Project Specific Exclusions
+# ===============================================
+# Server specific ignores
+server-panda/.serverless/
+server-panda/fly.toml
+
+# Build artifacts that will be created in Docker
+server-panda/client-panda/
+server-panda/landing-panda/
