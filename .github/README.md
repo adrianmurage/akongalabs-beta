@@ -6,125 +6,82 @@ This directory contains GitHub Actions workflows for the consolidated Working Pa
 
 ### `consolidated-deploy.yml`
 
-A comprehensive CI/CD pipeline that handles building, testing, and deploying all three projects in the consolidated repository:
+A unified CI/CD pipeline that builds all projects and deploys them together as a single application to Fly.io:
 
-- **server-panda** (Express.js backend)
-- **a-working-panda** (React frontend)
-- **landing-panda** (Astro landing site)
+- **server-panda** (Express.js server that serves everything)
+- **a-working-panda** (React app integrated into server)
+- **landing-panda** (Astro site integrated into server)
+
+**Architecture**: All applications are served by the Express server in production, deployed as one unit to Fly.io.
 
 ## 📋 Workflow Jobs
 
 ### 1. `test-and-build`
-**Purpose**: Builds and tests all projects, creates deployment artifacts
+**Purpose**: Tests and validates all projects before deployment
 
 **Steps**:
 - Installs dependencies for all three projects
 - Runs linting (with error tolerance)
-- Builds all projects
-- Uploads build artifacts for deployment jobs
+- Tests builds for all projects (validation only)
+- No artifacts needed - unified build happens in deployment job
 
 **Triggers**: All pushes and pull requests to `main`
 
-### 2. `deploy-server`
-**Purpose**: Deploys the Express.js server to Fly.io
+### 2. `deploy-unified`
+**Purpose**: Deploys all applications together to Fly.io as unified app
 
 **Steps**:
-- Builds the React UI for server integration
-- Deploys to Fly.io using existing configuration
+- Installs dependencies for all projects
+- Runs `yarn build:ui` to build and integrate frontend apps into server
+- Deploys single unified application to Fly.io
 - Uses cache-busting with commit SHA
 
 **Triggers**: Only on pushes to `main` (production deployments)
 
-### 3. `deploy-react-app`
-**Purpose**: Deploys the React application to static hosting
-
-**Current Status**: Placeholder - requires hosting provider configuration
-
-**Triggers**: Only on pushes to `main` (production deployments)
-
-### 4. `deploy-landing-site`
-**Purpose**: Deploys the Astro landing site to static hosting
-
-**Current Status**: Placeholder - requires hosting provider configuration
-
-**Triggers**: Only on pushes to `main` (production deployments)
-
-### 5. `notify-completion`
-**Purpose**: Provides deployment status summary
-
-**Triggers**: After all deployment jobs complete (success or failure)
+**Key Feature**: Uses the existing `build:ui` script that builds React app and Astro site, then copies their dist folders into the server directory for unified deployment.
 
 ## 🔧 Required Secrets
 
 Add these secrets to your GitHub repository settings:
 
-### Fly.io Deployment
-- `FLY_API_TOKEN`: Your Fly.io API token for server deployment
+### Fly.io Unified Deployment
+- `FLY_API_TOKEN`: Your Fly.io API token for unified application deployment
 
-### React App Deployment (when configured)
-- `NETLIFY_AUTH_TOKEN`: Netlify authentication token (if using Netlify)
-- `NETLIFY_SITE_ID`: Netlify site ID for React app
-- Or equivalent secrets for your chosen hosting provider
-
-### Landing Site Deployment (when configured)
-- `NETLIFY_LANDING_SITE_ID`: Netlify site ID for landing site (if using Netlify)
-- Or equivalent secrets for your chosen hosting provider
+**Note**: Only one secret required since all applications deploy together to Fly.io. No separate hosting providers needed.
 
 ## 🏗️ Configuration Steps
 
-### 1. Server Deployment (Already Configured)
-The server deployment is ready to use with Fly.io. Ensure you have:
-- `FLY_API_TOKEN` secret configured
+### 1. Unified Deployment (Ready to Use)
+The unified deployment is ready to use with Fly.io. Ensure you have:
+- `FLY_API_TOKEN` secret configured in GitHub repository settings
 - `fly.toml` file in the `server-panda/` directory
 - Fly.io app created and configured
+- `build:ui` script working in `server-panda/package.json`
 
-### 2. React App Deployment (Requires Setup)
-Choose a hosting provider and update the `deploy-react-app` job:
-
-#### For Netlify:
-```yaml
-- name: Deploy to Netlify
-  uses: nwtgck/actions-netlify@v2.1
-  with:
-    publish-dir: './a-working-panda/dist'
-    production-branch: main
-  env:
-    NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-    NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-```
-
-#### For Vercel:
-```yaml
-- name: Deploy to Vercel
-  uses: amondnet/vercel-action@v25
-  with:
-    vercel-token: ${{ secrets.VERCEL_TOKEN }}
-    vercel-org-id: ${{ secrets.ORG_ID }}
-    vercel-project-id: ${{ secrets.PROJECT_ID }}
-    working-directory: ./a-working-panda
-```
-
-### 3. Landing Site Deployment (Requires Setup)
-Similar configuration needed for the Astro landing site deployment.
+**No additional setup required** - the workflow automatically:
+1. Builds React app and Astro site
+2. Integrates them into the Express server
+3. Deploys everything as one application to Fly.io
 
 ## 🔄 Migration from Separate Repositories
 
 ### Changes from Original CI/CD
-The original `server-panda/.github/workflows/fly-deploy.yml` has been replaced with this consolidated approach that:
+The original `server-panda/.github/workflows/fly-deploy.yml` has been replaced with this unified approach that:
 
 1. **Eliminates cross-repository dependencies**: No longer needs to checkout separate repositories
-2. **Simplifies secret management**: All secrets in one place
-3. **Provides unified build process**: All projects built in single workflow
-4. **Enables coordinated deployments**: Deploy all projects together or separately
+2. **Simplifies secret management**: Only requires `FLY_API_TOKEN`
+3. **Matches actual architecture**: Unified deployment reflects how the app actually works
+4. **Uses existing build process**: Leverages the proven `build:ui` script
 
 ### Original vs New Workflow Comparison
 
-| Aspect | Original | Consolidated |
-|--------|----------|--------------|
+| Aspect | Original | Unified |
+|--------|----------|---------|
 | Repository Checkouts | 3 separate checkouts with PAT tokens | Single repository checkout |
-| Secret Requirements | `PAT_TOKEN` + `FLY_API_TOKEN` | `FLY_API_TOKEN` + hosting secrets |
-| Build Coordination | Server builds UI from external repos | All projects built together |
-| Deployment Dependencies | Complex cross-repo dependencies | Clean, linear deployment flow |
+| Secret Requirements | `PAT_TOKEN` + `FLY_API_TOKEN` | `FLY_API_TOKEN` only |
+| Build Coordination | Server builds UI from external repos | Uses consolidated `build:ui` script |
+| Deployment Model | Complex cross-repo dependencies | Single unified deployment to Fly.io |
+| Architecture Match | Didn't reflect actual serving model | Matches Express server architecture |
 
 ## 🧪 Testing the Workflow
 
@@ -147,24 +104,24 @@ The workflow runs on all pull requests, allowing you to test changes before merg
 
 ## 🚨 Important Notes
 
-1. **First Run**: The deployment jobs for React app and landing site will show as "successful" but won't actually deploy until you configure the hosting providers.
+1. **Unified Architecture**: The deployment reflects the actual application architecture where Express serves all applications.
 
-2. **Server Dependencies**: The server deployment assumes the React app build is integrated into the server build process via `yarn build:ui`.
+2. **Build Integration**: The workflow uses the existing `yarn build:ui` script that properly integrates frontend builds into the server.
 
-3. **Artifact Storage**: Build artifacts are stored for deployment jobs. GitHub has limits on artifact storage duration (default 90 days).
+3. **Single Deployment**: Only one deployment to Fly.io - no separate hosting providers needed.
 
-4. **Concurrency**: Server deployment uses concurrency groups to prevent simultaneous deployments.
+4. **Concurrency**: Unified deployment uses concurrency groups to prevent simultaneous deployments.
 
 ## 🔧 Customization
 
 ### Adding New Projects
-To add a new project to the consolidated workflow:
+To add a new project to the unified workflow:
 
 1. Add dependency installation step in `test-and-build`
-2. Add build step in `test-and-build`
-3. Add artifact upload step
-4. Create new deployment job
-5. Update `notify-completion` dependencies
+2. Add build validation step in `test-and-build`
+3. Update `build:ui` script in `server-panda/package.json` to include new project
+4. Update `deploy-unified` job to install new project dependencies
+5. Configure Express server to serve the new project's static files
 
 ### Environment-Specific Deployments
 Consider creating separate workflows for different environments:

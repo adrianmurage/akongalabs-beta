@@ -130,25 +130,30 @@ yarn start        # Start production server
 
 ```mermaid
 graph TD
-    A[Landing Panda - Astro Site] --> B[A Working Panda - React App]
-    B --> C[Server Panda - Express API]
-    C --> D[PostgreSQL Database]
+    U[Users/Browser] --> S[Server Panda - Express]
+    S --> L[Landing Panda - Static Files]
+    S --> R[React App - Static Files]
+    S --> A[API Routes]
+    A --> D[PostgreSQL Database]
     
-    style A fill:#ff6b6b
-    style B fill:#4ecdc4
-    style C fill:#45b7d1
-    style D fill:#96ceb4
+    style S fill:#45b7d1
+    style L fill:#ff6b6b
+    style R fill:#4ecdc4
+    style A fill:#96ceb4
+    style D fill:#f7d794
 ```
 
-- **Landing Panda**: Marketing/landing pages that drive traffic to the main application
-- **A Working Panda**: Main React application providing the core user experience
-- **Server Panda**: Backend API serving data and handling business logic
+- **Server Panda**: Express server that serves everything - static files AND API
+- **Landing Panda**: Astro site served as static files by Express server
+- **A Working Panda**: React app served as static files by Express server
+- **Unified Architecture**: Single server deployment contains all three applications
 
 ### Deployment Strategy
 
-- **Landing Site**: Static deployment (Netlify, Vercel, etc.)
-- **React App**: Static/SPA deployment with API integration
-- **Express Server**: Containerized deployment on Fly.io
+- **Unified Deployment**: All applications deployed together to Fly.io
+- **Development**: Each project runs independently with proxy middleware
+- **Production**: Express server serves React app and Astro site as static files
+- **Single Entry Point**: All traffic goes through Express server on Fly.io
 
 ## 🔧 Configuration
 
@@ -201,34 +206,34 @@ This consolidated repository allows you to:
 
 1. **Feature Development**: Create feature branches for cross-project changes
 2. **Testing**: Test each project individually and integration points
-3. **Deployment**: Deploy projects in order: Server → React App → Landing Site
+3. **Deployment**: Single unified deployment to Fly.io containing all applications
 
 ## 🚀 Deployment
 
-### Individual Project Deployment
+### Unified Deployment Process
 
-Each project can be deployed independently:
+All applications are deployed together as a single unit to Fly.io:
 
 ```bash
-# Deploy server first
-cd server-panda && fly deploy
-
-# Build and deploy React app
-cd a-working-panda && yarn build
-# Deploy dist/ to your hosting provider
-
-# Build and deploy landing site
-cd landing-panda && yarn build
-# Deploy dist/ to your static hosting provider
+# Build and deploy everything together
+cd server-panda
+yarn build:ui    # Builds React app and Astro site, copies to server directory
+fly deploy       # Deploys Express server with integrated frontend apps
 ```
 
-### Unified CI/CD
+The `build:ui` script automatically:
+1. Builds the React application (`a-working-panda`)
+2. Builds the Astro landing site (`landing-panda`) 
+3. Copies both built applications into the server directory
+4. Everything deploys together to Fly.io as one application
 
-Consider setting up GitHub Actions or similar CI/CD to:
-- Build all projects on push
-- Run tests across all codebases
-- Deploy in proper dependency order
-- Manage environment-specific configurations
+### CI/CD Pipeline
+
+The GitHub Actions workflow:
+- Builds and tests all projects
+- Runs the unified build process (`yarn build:ui`)
+- Deploys everything to Fly.io in a single deployment
+- No separate hosting providers needed
 
 ## 🔄 Repository History
 
