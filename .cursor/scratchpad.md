@@ -97,18 +97,14 @@ Each repository has its own git history and commit structure. The goal is to pre
 ## Project Status Board
 
 ### To Do
-- [ ] Task 1.1: Rename React app directory using git mv
-- [ ] Task 1.2: Update Express server route configurations
-- [ ] Task 1.3: Update CI/CD workflow directory references
-- [ ] Task 2.1: Create granular build commands in server-panda/package.json
-- [ ] Task 2.2: Update combined build:ui script
-- [ ] Task 2.3: Update CI/CD workflow to use new build structure
-- [ ] Task 3.1: Update README.md with new directory structure
-- [ ] Task 3.2: Update .gitignore patterns if needed
-- [ ] Task 3.3: Update CI/CD documentation
-- [ ] Task 4.1: Test individual build commands
-- [ ] Task 4.2: Test full development workflow
-- [ ] Task 4.3: Test deployment workflow
+- [ ] Task 1.1: Update client-panda/package.json name field
+- [ ] Task 1.2: Remove orphaned server-panda/a-working-panda/ directory
+- [ ] Task 1.3: Clean up legacy workflow file
+- [ ] Task 2.1: Fix README.md documentation links
+- [ ] Task 2.2: Update client-panda/README.md setup instructions
+- [ ] Task 2.3: Clean historical references in scratchpad (optional)
+- [ ] Task 3.1: Comprehensive reference audit
+- [ ] Task 3.2: Test all functionality with cleaned references
 
 ### In Progress
 - None
@@ -136,28 +132,40 @@ Each repository has its own git history and commit structure. The goal is to pre
 - [x] Task B.3: Correct architecture diagrams and descriptions
 - [x] Task C.1: Verify build process integration
 - [x] Task C.2: Validate deployment workflow
+- [x] Task 1.1: Rename React app directory using git mv
+- [x] Task 1.2: Update Express server route configurations
+- [x] Task 1.3: Update CI/CD workflow directory references
+- [x] Task 2.1: Create granular build commands in server-panda/package.json
+- [x] Task 2.2: Update combined build:ui script
+- [x] Task 2.3: Update CI/CD workflow to use new build structure
+- [x] Task 3.1: Update README.md with new directory structure
+- [x] Task 3.2: Update .gitignore patterns if needed
+- [x] Task 3.3: Update CI/CD documentation
+- [x] Task 4.1: Test individual build commands
+- [x] Task 4.2: Test full development workflow
+- [x] Task 4.3: Test deployment workflow
 
 ## Current Status / Progress Tracking
 
-**Current Phase**: NEW ENHANCEMENT - Build Commands Separation & Directory Rename
-**Next Phase**: Phase 6 - Implement Build System Improvements
+**Current Phase**: Phase 7 - Reference Cleanup In Progress
+**Next Phase**: Final verification and testing
 
 **Repository Consolidation Summary**:
 - ✅ All 3 repositories successfully merged with history preserved
 - ✅ server-panda: Express server integrated (commit: cd89548)
-- ✅ a-working-panda: React app integrated (commit: fe63043)
+- ✅ client-panda: React app integrated and renamed (commit: fe63043, rename: 003a222, cleanup: in progress)
 - ✅ landing-panda: Astro site integrated (commit: 73f8a4c)
 - ✅ Root level: Unified git repository with complete history
 - ✅ Configuration: Comprehensive .gitignore, README, and CI/CD setup
-- ✅ Configuration: Comprehensive .gitignore, README, and CI/CD setup
 - ✅ CI/CD Architecture Fix: Corrected deployment model to match unified architecture
-- ✅ Final fix commit: b903057
+- ✅ Build System Enhancement: Granular build commands and directory rename
+- ✅ Final enhancement commit: 5fdd12d
 
-**🔄 ENHANCEMENT PHASE**: Repository consolidation complete, now implementing build system improvements and directory rename!
+**🔧 CLEANUP IN PROGRESS**: Repository consolidation with enhanced build system complete, actively cleaning remaining references!
 
 ## Executor's Feedback or Assistance Requests
 
-**🎉 COMPLETE SUCCESS**: Repository consolidation and CI/CD pipeline both successful! Architecture error identified and fixed.
+**🎉 COMPLETE SUCCESS**: Repository consolidation, CI/CD pipeline, and build system enhancements all successful!
 
 **Final Execution Results**:
 - ✅ Used `git subtree add` successfully for all 3 repositories
@@ -168,9 +176,81 @@ Each repository has its own git history and commit structure. The goal is to pre
 - ✅ Unified README with architecture documentation
 - ✅ Updated CI/CD pipeline for consolidated structure (initially incorrect)
 - ✅ Fixed CI/CD pipeline to match unified deployment architecture
-- ✅ Full testing and verification completed
+- ✅ Enhanced build system with granular commands (build:client, build:landing)
+- ✅ Renamed React app directory to client-panda for better clarity
+- ✅ Full testing and verification completed for all enhancements
 
-**Deployment Pipeline Ready**: CI/CD pipeline now correctly matches unified deployment architecture and is production-ready!
+**Cleanup Phase Active**: CI/CD pipeline and build system ready, comprehensive reference cleanup in progress!
+
+## REFERENCE CLEANUP REQUIRED - REMAINING A-WORKING-PANDA REFERENCES
+
+### Problem Analysis
+Despite successful directory rename and main configuration updates, comprehensive audit reveals **19+ remaining references** to `a-working-panda` scattered throughout the repository that need cleanup.
+
+### Reference Categories Found
+
+#### High Priority - Functional Impact
+1. **`client-panda/package.json`** - Package name still "a-working-panda"
+2. **`server-panda/a-working-panda/`** - Old build directory still exists alongside new one
+3. **`server-panda/.github/workflows/fly-deploy.yml`** - Legacy workflow with old references
+
+#### Medium Priority - Documentation Impact  
+4. **`README.md`** - Documentation link references
+5. **`client-panda/README.md`** - Setup instructions reference old name
+6. **`.cursor/scratchpad.md`** - Historical planning references (low impact)
+
+#### Low Priority - Backup/Historical
+7. **`.backups/a-working-panda-backup/`** - Backup directory (intentionally preserved)
+
+### Detailed Task Breakdown
+
+#### Phase 1: Functional Fixes
+- [ ] **Task 1.1**: Update client-panda/package.json name field
+  - Success Criteria: Package name changed from "a-working-panda" to "client-panda"
+  - Verification: Package.json reflects correct project name
+
+- [ ] **Task 1.2**: Remove orphaned server-panda/a-working-panda/ directory
+  - Success Criteria: Old build directory removed, only client-panda/ remains
+  - Verification: `ls server-panda/` shows only client-panda and landing-panda dirs
+
+- [ ] **Task 1.3**: Clean up legacy workflow file
+  - Success Criteria: Remove or update server-panda/.github/workflows/fly-deploy.yml
+  - Verification: No conflicting workflow files remain
+
+#### Phase 2: Documentation Cleanup
+- [ ] **Task 2.1**: Fix README.md documentation links
+  - Success Criteria: All documentation links reference client-panda
+  - Verification: All links work and point to correct directories
+
+- [ ] **Task 2.2**: Update client-panda/README.md setup instructions
+  - Success Criteria: Setup instructions use correct directory name
+  - Verification: Instructions match actual directory structure
+
+- [ ] **Task 2.3**: Clean historical references in scratchpad (optional)
+  - Success Criteria: Update planning documents for consistency
+  - Verification: Documentation reflects current state
+
+#### Phase 3: Verification
+- [ ] **Task 3.1**: Comprehensive reference audit
+  - Success Criteria: No functional a-working-panda references remain
+  - Verification: `grep -r "a-working-panda"` shows only intentional backup references
+
+- [ ] **Task 3.2**: Test all functionality with cleaned references
+  - Success Criteria: All build, development, and deployment workflows work
+  - Verification: Full system test passes
+
+### Impact Assessment
+**Critical**: Package name and orphaned directories could cause confusion
+**Important**: Documentation links may be broken
+**Minor**: Historical references in planning documents
+
+### Success Criteria for Cleanup
+- ✅ Package name matches directory name (client-panda)
+- ✅ No orphaned build directories in server-panda/
+- ✅ All documentation links functional and correct
+- ✅ Legacy workflow files removed or updated
+- ✅ Comprehensive grep audit shows only backup references remain
+- ✅ Full development and deployment workflow tested and working
 
 ## NEW ENHANCEMENT REQUEST - BUILD COMMANDS SEPARATION & DIRECTORY RENAME
 

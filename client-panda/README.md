@@ -33,7 +33,7 @@ A modern React application built with Vite, featuring Radix UI components and dy
 1. Clone the repository:
 ```bash
 git clone <repository-url>
-cd a-working-panda
+cd client-panda
 ```
 
 2. Install dependencies:

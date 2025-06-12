@@ -187,7 +187,7 @@ docker run -p 3000:3000 server-panda
 
 Detailed documentation for each project can be found in their respective directories:
 
-- [React App Documentation](./a-working-panda/README.md)
+- [React App Documentation](./client-panda/README.md)
 - [Astro Site Documentation](./landing-panda/README.md)
 - [Express Server Documentation](./server-panda/README.md)
 

@@ -17,7 +17,7 @@ The specific responsibilities and actions for each role are as follows:
 
 ## Document Conventions
 
-- The `.cursor/scratchpad.md` file is divided into several sections as per the above structure. Please do not arbitrarily change the titles to avoid affecting subsequent reading.
+- The `.cursor/scratchpad.md` file is divided into several sections as per the above structure. Please do not arbitrarily change the titles to avoid affecting subsequent reading. If the file gets modified, ensure that the structure remains consistent with the guidelines provided.
 - Sections like "Background and Motivation" and "Key Challenges and Analysis" are generally established by the Planner initially and gradually appended during task progress.
 - "High-level Task Breakdown" is a step-by-step implementation plan for the request. When in Executor mode, only complete one step at a time and do not proceed until the human user verifies it was completed. Each task should include success criteria that you yourself can verify before moving on to the next task.
 - "Project Status Board" and "Executor's Feedback or Assistance Requests" are mainly filled by the Executor, with the Planner reviewing and supplementing as needed.
