@@ -24,8 +24,7 @@ min_machines_running = 0
 processes = ['app']
 
 # Health check configuration for unified app
-[http_service.checks]
-[http_service.checks.health]
+[[http_service.checks]]
 grace_period = "10s"
 interval = "30s"
 method = "GET"
