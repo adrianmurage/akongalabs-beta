@@ -17,13 +17,13 @@ This index provides quick access to all security documentation and resources for
 - **[deployment-test-plan.md](../.cursor/deployment-test-plan.md)** - Security testing results and validation
 
 ### **🛡️ Active Security Implementation**
-- **[server-panda/src/middleware/security.ts](./server-panda/src/middleware/security.ts)** - Security middleware implementation
-- **[server-panda/src/middleware/index.ts](./server-panda/src/middleware/index.ts)** - Middleware integration
-- **[server-panda/package.json](./server-panda/package.json)** - Security dependencies
+- **[server-panda/src/middleware/security.ts](../server-panda/src/middleware/security.ts)** - Security middleware implementation
+- **[server-panda/src/middleware/index.ts](../server-panda/src/middleware/index.ts)** - Middleware integration
+- **[server-panda/package.json](../server-panda/package.json)** - Security dependencies
 
 ### **⚙️ Configuration Files**
-- **[fly.toml](./fly.toml)** - Fly.io deployment security configuration
-- **[Dockerfile](./Dockerfile)** - Container security implementation
+- **[fly.toml](../fly.toml)** - Fly.io deployment security configuration
+- **[Dockerfile](../Dockerfile)** - Container security implementation
 
 ---
 
