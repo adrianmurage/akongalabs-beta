@@ -106,8 +106,10 @@ openssl s_client -connect working-panda-unified.fly.dev:443 -servername working-
 
 ### **Comprehensive Security Check**
 ```bash
-# Run all security validations
-./scripts/security-check.sh  # (To be created)
+# Run all security validations manually:
+cd server-panda && bun audit
+curl -I https://working-panda-unified.fly.dev/
+for i in {1..5}; do curl -s -I https://working-panda-unified.fly.dev/api/health | grep ratelimit-remaining; done
 ```
 
 ---
