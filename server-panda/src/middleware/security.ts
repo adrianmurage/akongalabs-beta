@@ -102,17 +102,33 @@ export function setupSecurityMiddleware(app: Application): void {
   app.use(cors(corsOptions));
 
   // Rate Limiting - Prevent abuse
+  const isDevelopment = process.env.NODE_ENV !== "production";
+
+  // Allow configuration via environment variables
+  const RATE_LIMIT_WINDOW =
+    parseInt(process.env.RATE_LIMIT_WINDOW || "15", 10) * 60 * 1000; // minutes to ms
+  const RATE_LIMIT_MAX = parseInt(
+    process.env.RATE_LIMIT_MAX || (isDevelopment ? "1000" : "100"),
+    10,
+  );
+  const RATE_LIMIT_API_MAX = parseInt(
+    process.env.RATE_LIMIT_API_MAX || (isDevelopment ? "500" : "50"),
+    10,
+  );
+
   const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100, // Limit each IP to 100 requests per windowMs
+    windowMs: RATE_LIMIT_WINDOW,
+    max: RATE_LIMIT_MAX,
     message: {
       error: "Too many requests from this IP",
-      retryAfter: "15 minutes",
+      retryAfter: `${RATE_LIMIT_WINDOW / 60000} minutes`,
     },
     standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
     legacyHeaders: false, // Disable the `X-RateLimit-*` headers
-    // Skip rate limiting for health checks
-    skip: (req) => req.path === "/api/health",
+    // Skip rate limiting for health checks and optionally in development
+    skip: (req) =>
+      req.path === "/api/health" ||
+      (isDevelopment && process.env.DISABLE_RATE_LIMIT_DEV === "true"),
   });
 
   // Apply rate limiting to all routes
@@ -120,19 +136,33 @@ export function setupSecurityMiddleware(app: Application): void {
 
   // API-specific rate limiting (stricter)
   const apiLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 50, // Limit each IP to 50 API requests per windowMs
+    windowMs: RATE_LIMIT_WINDOW,
+    max: RATE_LIMIT_API_MAX,
     message: {
       error: "Too many API requests from this IP",
-      retryAfter: "15 minutes",
+      retryAfter: `${RATE_LIMIT_WINDOW / 60000} minutes`,
     },
     standardHeaders: true,
     legacyHeaders: false,
-    skip: (req) => req.path === "/api/health", // Allow unlimited health checks
+    skip: (req) =>
+      req.path === "/api/health" ||
+      (isDevelopment && process.env.DISABLE_RATE_LIMIT_DEV === "true"),
   });
 
   // Apply stricter rate limiting to API routes
   app.use("/api", apiLimiter);
+
+  // Log rate limit configuration on startup
+  console.log(`🔒 Rate Limiting Configuration:`);
+  console.log(
+    `   - Environment: ${isDevelopment ? "Development" : "Production"}`,
+  );
+  console.log(`   - Window: ${RATE_LIMIT_WINDOW / 60000} minutes`);
+  console.log(`   - Global Max: ${RATE_LIMIT_MAX} requests`);
+  console.log(`   - API Max: ${RATE_LIMIT_API_MAX} requests`);
+  console.log(
+    `   - Skip in Dev: ${isDevelopment && process.env.DISABLE_RATE_LIMIT_DEV === "true" ? "Yes" : "No"}`,
+  );
 
   // Security logging middleware
   app.use((req, _res, next) => {

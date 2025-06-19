@@ -1,42 +1,65 @@
 ---
-
+const isDev = import.meta.env.DEV;
+const baseUrl = isDev ? "http://localhost:3001" : "";
 ---
 
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Landing Page - Landing Panda 🐼</title>
-	</head>
-	<body>
-		<h1>🚀 Landing Page Test</h1>
-		<p>This is a test landing page to verify multiple routes are working correctly!</p>
-		
-		<div style="margin: 2rem 0; padding: 1rem; background-color: #f0f8ff; border: 1px solid #ccc; border-radius: 8px;">
-			<h2>✅ Multi-page routing is working!</h2>
-			<p>You've successfully navigated to the <code>/landing</code> route.</p>
-		</div>
+    <head>
+        <meta charset="utf-8" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <meta name="viewport" content="width=device-width" />
+        <meta name="generator" content={Astro.generator} />
+        <title>Landing Page - Landing Panda 🐼</title>
+    </head>
+    <body>
+        <h1>🚀 Landing Page Test</h1>
+        <p>
+            This is a test landing page to verify multiple routes are working
+            correctly!
+        </p>
 
-		<nav style="margin: 2rem 0;">
-			<h3>Navigation:</h3>
-			<ul style="list-style-type: none; padding: 0;">
-				<li style="margin: 0.5rem 0;">
-					<a href="/" style="color: #0066cc; text-decoration: none;">← Back to Home</a>
-				</li>
-				<li style="margin: 0.5rem 0;">
-					<a href="/app" style="color: #0066cc; text-decoration: none;">Go to React App</a>
-				</li>
-				<li style="margin: 0.5rem 0;">
-					<a href="/api/health" style="color: #0066cc; text-decoration: none;">Check API Health</a>
-				</li>
-			</ul>
-		</nav>
+        <div
+            style="margin: 2rem 0; padding: 1rem; background-color: #f0f8ff; border: 1px solid #ccc; border-radius: 8px;"
+        >
+            <h2>✅ Multi-page routing is working!</h2>
+            <p>
+                You've successfully navigated to the <code>/landing</code> route.
+            </p>
+        </div>
 
-		<footer style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #eee; color: #666;">
-			<p>This page demonstrates that Astro's file-based routing is working correctly.</p>
-			<p>Current route: <strong>/landing</strong></p>
-		</footer>
-	</body>
+        <nav style="margin: 2rem 0;">
+            <h3>Navigation:</h3>
+            <ul style="list-style-type: none; padding: 0;">
+                <li style="margin: 0.5rem 0;">
+                    <a href="/" style="color: #0066cc; text-decoration: none;"
+                        >← Back to Home</a
+                    >
+                </li>
+                <li style="margin: 0.5rem 0;">
+                    <a
+                        href={`${baseUrl}/app`}
+                        style="color: #0066cc; text-decoration: none;"
+                        >Go to React App</a
+                    >
+                </li>
+                <li style="margin: 0.5rem 0;">
+                    <a
+                        href={`${baseUrl}/api/health`}
+                        style="color: #0066cc; text-decoration: none;"
+                        >Check API Health</a
+                    >
+                </li>
+            </ul>
+        </nav>
+
+        <footer
+            style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #eee; color: #666;"
+        >
+            <p>
+                This page demonstrates that Astro's file-based routing is
+                working correctly.
+            </p>
+            <p>Current route: <strong>/landing</strong></p>
+        </footer>
+    </body>
 </html>

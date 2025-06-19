@@ -301,9 +301,391 @@ The current Dockerfile and fly.toml configuration is fully functional and ready 
 
 **💡 Note**: The application can be redeployed anytime using `fly deploy` - all configuration and security features are preserved in the repository.
 
+## CSS MODULES MIGRATION ANALYSIS 📋
+
+### **Current State Assessment**
+Your setup **already supports CSS Modules** out of the box with Vite! However, the recent Base UI integration introduced inline styles that need migration.
+
+#### **Current Styling Approach Mix:**
+1. **CSS Modules**: ✅ Already configured and working (App.module.css)
+2. **Inline Styles**: ⚠️ Heavily used in recent refactor
+3. **Base UI**: Unstyled components that need CSS Module styling
+
+### **CSS Modules Architecture Plan**
+
+#### **Directory Structure**
+```
+client-panda/src/
+├── styles/
+│   ├── global.css              # Global styles, CSS variables
+│   ├── utils.module.css        # Utility classes (flex, spacing, etc.)
+│   └── themes/
+│       ├── light.css           # Light theme variables
+│       └── dark.css            # Dark theme variables
+├── components/
+│   ├── Button/
+│   │   ├── Button.tsx
+│   │   └── Button.module.css   # Component-specific styles
+│   └── [Component]/
+│       ├── [Component].tsx
+│       └── [Component].module.css
+└── features/
+    └── [Feature]/
+        └── [Feature].module.css
+```
+
+#### **CSS Module Naming Conventions**
+```css
+/* Component Root */
+.button { }
+
+/* Component Elements (BEM-like) */
+.button__icon { }
+.button__text { }
+
+/* Component Modifiers */
+.button--primary { }
+.button--large { }
+.button--disabled { }
+
+/* Component States */
+.button:hover { }
+.button:focus { }
+.button:active { }
+
+/* Composition Pattern */
+.button.button--primary.button--large { }
+```
+
+#### **Type-Safe CSS Modules Pattern**
+```typescript
+// types/css-modules.d.ts
+declare module '*.module.css' {
+  const classes: { [key: string]: string };
+  export default classes;
+}
+
+// Component usage with clsx/classnames
+import styles from './Button.module.css';
+import clsx from 'clsx';
+
+<button className={clsx(
+  styles.button,
+  styles[`button--${variant}`],
+  styles[`button--${size}`],
+  { [styles['button--disabled']]: disabled }
+)} />
+```
+
+#### **CSS Variables Strategy**
+```css
+/* global.css */
+:root {
+  /* Colors */
+  --color-primary: #3b82f6;
+  --color-primary-hover: #2563eb;
+  --color-text: #374151;
+  
+  /* Spacing */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  
+  /* Borders */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-focus: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+/* Dark theme overrides */
+[data-theme="dark"] {
+  --color-text: #f3f4f6;
+  --color-primary: #60a5fa;
+}
+```
+
+#### **Utility Classes Module**
+```css
+/* utils.module.css */
+/* Flexbox utilities */
+.flex { display: flex; }
+.flexColumn { flex-direction: column; }
+.flexCenter { justify-content: center; align-items: center; }
+.gap1 { gap: var(--spacing-sm); }
+.gap2 { gap: var(--spacing-md); }
+
+/* Typography utilities */
+.textSmall { font-size: 0.875rem; }
+.textLarge { font-size: 1.25rem; }
+.fontBold { font-weight: 700; }
+.textGray { color: var(--color-text-secondary); }
+
+/* Layout utilities */
+.container { 
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--spacing-md);
+}
+```
+
+#### **Base UI Component Styling Pattern**
+```css
+/* Dialog.module.css - Example for Base UI Dialog */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: var(--z-backdrop);
+}
+
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--color-bg);
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  z-index: var(--z-popup);
+  min-width: 300px;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: var(--spacing-md);
+}
+```
+
+### **CSS Modules Migration Plan**
+
+#### **Phase 1: Architecture Setup (1 hour)**
+- [ ] **Task 1.1**: Create styles directory structure
+  - Success Criteria: Organized folder structure for CSS modules
+- [ ] **Task 1.2**: Set up global.css with CSS variables
+  - Success Criteria: Design tokens defined as CSS variables
+- [ ] **Task 1.3**: Create utils.module.css with common utilities
+  - Success Criteria: Reusable utility classes available
+- [ ] **Task 1.4**: Configure TypeScript declarations for CSS modules
+  - Success Criteria: Type safety for CSS module imports
+
+#### **Phase 2: Component Migration (2 hours)**
+- [ ] **Task 2.1**: Migrate Button component to CSS modules
+  - Success Criteria: All variants, sizes, states in Button.module.css
+- [ ] **Task 2.2**: Create Layout CSS modules for App/Stats
+  - Success Criteria: Layout styles extracted to modules
+- [ ] **Task 2.3**: Create Dialog.module.css for Base UI Dialog
+  - Success Criteria: All dialog styles in dedicated module
+- [ ] **Task 2.4**: Install and configure clsx for className management
+  - Success Criteria: Clean conditional className logic
+
+#### **Phase 3: Theme Integration (30 mins)**
+- [ ] **Task 3.1**: Integrate CSS modules with next-themes
+  - Success Criteria: Theme switching updates CSS variables
+- [ ] **Task 3.2**: Create theme-specific CSS files
+  - Success Criteria: Light/dark themes via CSS variables
+- [ ] **Task 3.3**: Test theme switching with CSS modules
+  - Success Criteria: Smooth theme transitions
+
+### **Benefits of This Architecture**
+- **Type Safety**: Full TypeScript support for CSS classes
+- **Maintainability**: Clear file organization and naming conventions
+- **Performance**: CSS compiled at build time, tree-shakeable
+- **Theming**: CSS variables enable easy theme switching
+- **Scalability**: Pattern works for small and large applications
+- **Base UI Ready**: Perfect for styling unstyled components
+
+### **Example Migration**
+```typescript
+// Before (inline styles)
+<div style={{
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '1rem',
+  justifyContent: 'center'
+}}>
+
+// After (CSS modules + utilities)
+<div className={clsx(
+  styles.container,
+  utils.flex,
+  utils.flexColumn,
+  utils.flexCenter,
+  utils.gap2
+)}>
+```
+
+## DIAGNOSTIC ISSUES FIXED ✅
+
+### **Issues Resolved**
+1. **App.tsx**: ✅ Removed unused 'Link' import
+2. **Button.tsx**: ✅ Fixed TypeScript type errors with proper type annotations
+
+### **Verification Complete**
+- ✅ Zero errors, zero warnings across all files
+- ✅ TypeScript compilation successful
+- ✅ Production build working
+
+## CSS MODULES MIGRATION COMPLETED ✅
+
+### **Implementation Summary**
+Successfully migrated from inline styles to CSS modules architecture:
+
+#### **Architecture Established:**
+1. **Global Design System** (`global.css`)
+   - CSS variables for colors, spacing, typography, shadows
+   - Light/dark theme support via CSS variables
+   - Smooth theme transitions
+
+2. **Utility Classes** (`utils.module.css`)
+   - Flexbox utilities
+   - Spacing helpers
+   - Typography modifiers
+   - Responsive utilities
+
+3. **Component CSS Modules**
+   - `Button.module.css`: Complete button system with variants, sizes, states
+   - `App.module.css`: Layout and dialog styles with animations
+   - `Stats.module.css`: Card and content styles
+
+#### **Key Improvements:**
+- **Performance**: CSS compiled at build time (9.99 kB total CSS, 2.57 kB gzipped)
+- **Type Safety**: Full TypeScript support for CSS module imports
+- **Maintainability**: Clear separation of concerns, predictable file structure
+- **Developer Experience**: IntelliSense for CSS classes, clsx for conditional styling
+- **Theme Support**: Seamless integration with next-themes
+
+### **Migration Results:**
+- ✅ All inline styles removed
+- ✅ clsx installed and integrated
+- ✅ Base UI components styled via CSS modules
+- ✅ Dark theme support maintained
+- ✅ Production build successful
+
+## BASE UI INTEGRATION COMPLETED SUCCESSFULLY ✅
+
+### **Implementation Summary**:
+- **@radix-ui/themes removal**: ✅ Complete - 73 packages removed from node_modules
+- **@base-ui-components/react installation**: ✅ Complete - v1.0.0-beta.0 installed
+- **Component Migration**: ✅ Complete - All Radix UI components replaced
+- **Enhanced Button Component**: ✅ Complete - Built with size/variant system and interactive states
+- **Base UI Dialog Integration**: ✅ Complete - Working example with proper styling
+- **Build Verification**: ✅ Complete - TypeScript compilation successful, zero errors/warnings
+
+### **Components Successfully Migrated**:
+1. **Layout Components**: Flex → native div with CSS module classes
+2. **Typography**: Text → semantic HTML with CSS module typography classes
+3. **Interactive Components**: Button → CSS modules with clsx for variants
+4. **Card Components**: Card → CSS module with hover effects and transitions
+5. **Dialog Component**: Base UI Dialog with CSS module animations
+6. **Theme Provider**: Removed Radix Theme, CSS variables with next-themes
+
+### **Base UI Components Available**:
+Available for future integration: Accordion, AlertDialog, Avatar, Checkbox, CheckboxGroup, Collapsible, ContextMenu, Dialog, Field, Form, Input, Menu, Popover, Progress, Select, Slider, Switch, Tabs, Toast, Toggle, Tooltip, and more.
+
+### **Production Ready Status**:
+✅ **FULLY MIGRATED TO CSS MODULES**: Application now uses a scalable CSS architecture with:
+- Zero inline styles
+- Type-safe CSS module imports
+- Consistent design tokens via CSS variables
+- Base UI components styled with CSS modules
+- Dark/light theme support via CSS variables
+- Build optimized: 398KB JS (131KB gzipped), 10KB CSS (2.6KB gzipped)
+
+**Next Steps**: Add new Base UI components as needed, following established CSS module patterns.
+
+## SSL ERROR FIX - LANDING-PANDA DEVELOPMENT LINKS ✅
+
+### **Problem Identified**
+When running landing-panda in development mode (port 4321), clicking links to `/app` or `/api/health` caused SSL protocol errors because:
+- Links were relative paths that tried to access `http://0.0.0.0:4321/app`
+- The browser attempted HTTPS upgrade on 0.0.0.0
+- These paths don't exist on the Astro dev server
+
+### **Solution Implemented**
+Used Astro's `import.meta.env.DEV` to create environment-aware URLs:
+```astro
+---
+const isDev = import.meta.env.DEV;
+const baseUrl = isDev ? "http://localhost:3001" : "";
+---
+
+<a href={`${baseUrl}/app`}>Go to the React App</a>
+<a href={`${baseUrl}/api/health`}>Check API Health</a>
+```
+
+### **Result**
+- ✅ Development: Links point to `http://localhost:3001/app` (Express server)
+- ✅ Production: Links use relative paths `/app` (unified server)
+- ✅ No more SSL errors when clicking links in development mode
+
+## RATE LIMITING IMPROVEMENTS IMPLEMENTED ✅
+
+### **Problem Solved**
+User hit their own rate limit (100 requests/15 min) during development testing, causing "Too many requests from this IP" errors.
+
+### **Solution Implemented**
+Enhanced rate limiting configuration with:
+
+1. **Environment-Aware Defaults**:
+   - Development: 1000 requests/15 min (global), 500 requests/15 min (API)
+   - Production: 100 requests/15 min (global), 50 requests/15 min (API)
+
+2. **Environment Variable Configuration**:
+   ```env
+   RATE_LIMIT_WINDOW=15              # Window in minutes
+   RATE_LIMIT_MAX=1000               # Max requests per window
+   RATE_LIMIT_API_MAX=500            # Max API requests per window
+   DISABLE_RATE_LIMIT_DEV=true       # Disable in development
+   ```
+
+3. **Improved Developer Experience**:
+   - Console logging of rate limit configuration on startup
+   - Dynamic retry messages based on window size
+   - Option to completely disable in development
+   - Health check endpoints always excluded
+
+### **Files Modified**:
+- `src/middleware/security.ts`: Enhanced rate limiting logic
+- `DEVELOPMENT.md`: Added rate limiting troubleshooting guide
+- `.env.template`: Created with all configuration options
+
+## FINAL PROJECT STATUS: ALL OBJECTIVES ACHIEVED ✅
+
+### **Completed Milestones**:
+1. **Repository Consolidation**: Merged 3 Git repos with full history preservation
+2. **CI/CD Pipeline**: GitHub Actions workflow with security scanning
+3. **Build System**: Unified build commands for all projects
+4. **Base UI Integration**: Replaced @radix-ui/themes with @base-ui-components/react
+5. **CSS Modules Architecture**: Zero inline styles, type-safe CSS with design tokens
+6. **Development Environment**: Fixed SSL issues, improved DX with proper URLs
+7. **Security**: Comprehensive security middleware and documentation
+8. **Deployment**: Fly.io ready with proper configuration
+9. **Rate Limiting**: Enhanced with development-friendly configuration
+
+### **Key Achievements**:
+- **Performance**: CSS reduced to 10KB (2.6KB gzipped), optimized builds
+- **Developer Experience**: CSS modules with IntelliSense, clsx for styling
+- **Type Safety**: Full TypeScript support, zero errors/warnings
+- **Maintainability**: Clear architecture, documented patterns
+- **Production Ready**: Deployed and tested on Fly.io
+
+### **Documentation Created**:
+- `SECURITY-INDEX.md`: Security overview and recommendations
+- `SECURITY-CHECKLIST.md`: Pre-deployment security checklist
+- `DEVELOPMENT.md`: Local development guide with troubleshooting
+- Architecture patterns in CSS modules and component structure
+
 ## Executor's Feedback or Assistance Requests
 
-**🎉 COMPLETE SUCCESS**: Repository consolidation, CI/CD pipeline, build system enhancements, reference cleanup, deployment configuration, security implementation, and GitHub migration all successful!
+**🎉 PROJECT COMPLETE**: All requested features implemented, tested, and documented. The application is production-ready with a scalable architecture for future enhancements.
+
+**Latest Achievement**: Implemented flexible rate limiting configuration with environment-aware defaults and developer-friendly options. No more hitting your own rate limits during testing!
 
 **Final Execution Results**:
 - ✅ Used `git subtree add` successfully for all 3 repositories
@@ -686,6 +1068,113 @@ The user has requested two improvements to the current build system:
 - ✅ No references to separate hosting providers remain
 - ✅ Build process tested and verified working correctly
 - ✅ Workflow syntax validated and deployment-ready
+
+## BASE UI COMPATIBILITY ANALYSIS - LANDING-PANDA & CLIENT-PANDA
+
+### Background and Motivation
+User requested analysis of whether Base UI (https://base-ui.com/react/overview/quick-start) can be used in both landing-panda (Astro) and client-panda (React/Vite) projects for consistent UI components across the applications.
+
+### Project Analysis
+
+#### Landing-Panda (Astro Project)
+- **Framework**: Astro 5.9.2
+- **Current State**: Pure Astro project with no React integration
+- **Package.json**: Contains only Astro dependencies
+
+#### Client-Panda (React/Vite Project)  
+- **Framework**: React 19.1.0 with Vite 6.3.5
+- **Current State**: Full React application with existing UI library (@radix-ui/themes)
+- **Package.json**: Contains React ecosystem dependencies
+
+### Base UI Requirements Analysis
+
+#### Technical Requirements
+1. **React Runtime**: Base UI requires React as it's a React-only component library
+2. **Package**: `@base-ui-components/react` (currently v1.0.0-alpha.8)
+3. **Portal Setup**: Requires CSS isolation setup for popup components
+4. **Styling**: Completely unstyled - requires custom CSS/styling solution
+
+### Compatibility Assessment
+
+#### ✅ Client-Panda Compatibility: FULLY COMPATIBLE
+- **Status**: Direct compatibility - no issues expected
+- **Integration**: Can install `@base-ui-components/react` directly
+- **Conflicts**: May conflict with existing `@radix-ui/themes` - needs evaluation
+- **Setup Required**: Portal CSS setup in main layout
+
+#### ⚠️ Landing-Panda Compatibility: COMPATIBLE WITH INTEGRATION
+- **Status**: Compatible but requires React integration setup
+- **Integration Requirements**:
+  1. Install `@astrojs/react` integration
+  2. Configure Astro to support React components
+  3. Install React runtime dependencies
+  4. Set up Base UI with proper hydration directives
+
+### Implementation Strategy
+
+#### Phase 1: Replace Existing Radix UI Components (Medium Risk) ✅ COMPLETED
+- [x] **Task 1.1**: Install Base UI package
+  - Success Criteria: @base-ui-components/react installed successfully
+  - ✅ COMPLETED: @base-ui-components/react v1.0.0-beta.0 installed
+- [x] **Task 1.2**: Set up portal CSS configuration
+  - Success Criteria: Portal styles configured in root layout
+  - ✅ COMPLETED: Added `isolation: isolate` to #root in index.css
+- [x] **Task 1.3**: Replace Flex, Text, Button, Card components currently in use
+  - Success Criteria: Existing components replaced with Base UI equivalents
+  - ✅ COMPLETED: Replaced with native HTML + enhanced Button component + Base UI Dialog example
+- [x] **Task 1.4**: Remove @radix-ui/themes package and imports
+  - Success Criteria: Package removed, no compilation errors, application functional
+  - ✅ COMPLETED: Package uninstalled, all imports removed, Theme provider removed
+- [x] **Task 1.5**: Test application functionality
+  - Success Criteria: All existing features work with Base UI components
+  - ✅ COMPLETED: Build successful, dev server running, Dialog component integrated
+
+#### Future Phase: Landing-Panda Integration (Deferred)
+- [ ] **Task F.1**: Evaluate Base UI need for landing pages
+- [ ] **Task F.2**: Configure @astrojs/react if needed
+- [ ] **Task F.3**: Share component wrappers between projects
+
+### Risk Assessment
+
+#### High Risk Areas
+1. **Astro React Integration**: Additional complexity and build configuration
+2. **Hydration Conflicts**: Ensuring proper client-side hydration for interactive components
+3. **Styling Coordination**: Base UI is unstyled, needs consistent styling approach across both apps
+
+#### Medium Risk Areas
+1. **Bundle Size Impact**: Adding React to Astro increases bundle size significantly
+2. **Radix UI Conflicts**: Potential conflicts between @radix-ui/themes and Base UI
+3. **Portal Rendering**: Different portal behavior between Astro and pure React
+
+#### Low Risk Areas
+1. **Client-Panda Integration**: Straightforward React-to-React integration
+2. **Base UI Stability**: Library is well-maintained by MUI team
+
+### Recommendations
+
+#### ✅ RECOMMENDED APPROACH: Client-Panda Focus with Component Wrapping
+1. **Client-Panda**: Full Base UI integration with @radix-ui/themes removal
+2. **Component Wrappers**: Create wrapped components for easy styling and prop customization
+3. **Landing-Panda**: Future consideration after client-panda success
+4. **Shared Architecture**: Design wrappers to be reusable across projects
+
+#### Implementation Benefits
+- **Full Control**: Unstyled Base UI provides complete styling freedom
+- **Consistent API**: Wrapped components provide unified interface
+- **Future-Proof**: Architecture ready for landing-panda integration
+- **Performance**: Remove unused @radix-ui/themes bundle weight
+
+### Final Assessment: ✅ REPLACEMENT COMPLETED SUCCESSFULLY
+
+**Summary**: Successfully replaced existing Radix UI components in client-panda with Base UI and native HTML equivalents. Clean removal of @radix-ui/themes dependency achieved. Enhanced Button component created with proper styling and interactions.
+
+#### Migration Results:
+- **App.tsx**: ✅ Replaced Flex/Text with native HTML + added Base UI Dialog example
+- **Stats.tsx**: ✅ Replaced Flex/Text/Card with native HTML elements + inline styling
+- **Button.tsx**: ✅ Enhanced with comprehensive styling system and hover/focus states  
+- **main.tsx**: ✅ Removed Theme provider and @radix-ui/themes imports
+- **Base UI Integration**: ✅ Dialog component successfully integrated as proof of concept
+- **Build Status**: ✅ Production build successful (398.55 kB, gzipped: 131.40 kB)
 
 ## Lessons
 

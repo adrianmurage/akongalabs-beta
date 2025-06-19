@@ -31,7 +31,7 @@ setupAstroRoutes(app);
 // Start server
 app.listen(PORT, "0.0.0.0", () => {
   console.log(
-    `🐼 Server Panda is running on port ${PORT}. http://0.0.0.0:${PORT}`,
+    `🐼 Server Panda is running on port ${PORT}. http://localhost:${PORT}`,
   );
 });
 

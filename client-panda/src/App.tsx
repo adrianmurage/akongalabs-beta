@@ -1,11 +1,16 @@
-import { Flex, Text, Button } from "@radix-ui/themes";
 import { useQuery } from "@tanstack/react-query";
-import { Link } from "react-router";
+import { useNavigate } from "react-router";
+import { useState } from "react";
+import { Dialog } from "@base-ui-components/react";
 import styles from "./App.module.css";
 import ThemeChanger from "./components/theme-changer/ThemeChanger";
+import { Button } from "./components/Button/Button";
 import api from "./lib/api";
 
 function App() {
+  const navigate = useNavigate();
+  const [dialogOpen, setDialogOpen] = useState(false);
+
   const {
     data: backendData,
     isLoading: loading,
@@ -19,34 +24,50 @@ function App() {
   });
 
   return (
-    <Flex
-      direction="column"
-      justify="center"
-      align="center"
-      gap="3"
-      className={styles.container}
-    >
-      <Text>Hello from Working Panda 🐼 :)</Text>
-      <Text>You're in the React App!</Text>
+    <div className={styles.container}>
+      <p className={styles.heading}>Hello from Working Panda 🐼 :)</p>
+      <p className={styles.text}>You're in the React App!</p>
       {loading ? (
-        <Text>Loading...</Text>
+        <p className={styles.text}>Loading...</p>
       ) : error ? (
-        <Text color="red">Failed to fetch data from backend</Text>
+        <p className={styles.errorText}>Failed to fetch data from backend</p>
       ) : (
-        <Text>{backendData}</Text>
+        <p className={styles.text}>{backendData}</p>
       )}
-      
-      <Flex gap="2">
-        <Button asChild>
-          <Link to="/stats">Go to Stats</Link>
+
+      <div className={styles.buttonGroup}>
+        <Button onClick={() => navigate("/stats")}>Go to Stats</Button>
+        <Button variant="outline" onClick={() => (window.location.href = "/")}>
+          Back to Home
         </Button>
-        <Button variant="outline" asChild>
-          <a href="/">Back to Home</a>
+        <Button variant="soft" onClick={() => setDialogOpen(true)}>
+          Open Dialog
         </Button>
-      </Flex>
-      
+      </div>
+
       <ThemeChanger />
-    </Flex>
+
+      <Dialog.Root open={dialogOpen} onOpenChange={setDialogOpen}>
+        <Dialog.Portal>
+          <Dialog.Backdrop className={styles.dialogBackdrop} />
+          <Dialog.Popup className={styles.dialogPopup}>
+            <Dialog.Title className={styles.dialogTitle}>
+              Base UI Dialog Example
+            </Dialog.Title>
+            <Dialog.Description className={styles.dialogDescription}>
+              This is a Base UI Dialog component integrated into the app. It
+              demonstrates the unstyled, accessible components from Base UI.
+            </Dialog.Description>
+            <div className={styles.dialogActions}>
+              <Button variant="outline" onClick={() => setDialogOpen(false)}>
+                Cancel
+              </Button>
+              <Button onClick={() => setDialogOpen(false)}>Confirm</Button>
+            </div>
+          </Dialog.Popup>
+        </Dialog.Portal>
+      </Dialog.Root>
+    </div>
   );
 }
 

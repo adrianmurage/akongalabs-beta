@@ -1,20 +1,21 @@
 ---
-
+const isDev = import.meta.env.DEV;
+const baseUrl = isDev ? "http://localhost:3001" : "";
 ---
 
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Landing Panda 🐼</title>
-	</head>
-	<body>
-		<h1>🐼 Hello from Astro static site landing page</h1>
-		<p>Welcome to Landing Panda!</p>
-		<p><a href="/landing">Go to Landing Page</a></p>
-		<p><a href="/app">Go to the React App</a></p>
-		<p><a href="/api/health">Check API Health</a></p>
-	</body>
+    <head>
+        <meta charset="utf-8" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <meta name="viewport" content="width=device-width" />
+        <meta name="generator" content={Astro.generator} />
+        <title>Landing Panda 🐼</title>
+    </head>
+    <body>
+        <h1>🐼 Hello from Astro static site landing page</h1>
+        <p>Welcome to Landing Panda!</p>
+        <p><a href="/landing">Go to Landing Page</a></p>
+        <p><a href={`${baseUrl}/app`}>Go to the React App</a></p>
+        <p><a href={`${baseUrl}/api/health`}>Check API Health</a></p>
+    </body>
 </html>

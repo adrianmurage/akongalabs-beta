@@ -1,10 +1,32 @@
-import { Button as RadixButton } from "@radix-ui/themes/src/index.js";
 import type { ComponentProps } from "react";
+import clsx from "clsx";
+import styles from "./Button.module.css";
 
-type ButtonProps = ComponentProps<typeof RadixButton> & {
-  variant?: ComponentProps<typeof RadixButton>["variant"];
+type ButtonProps = ComponentProps<"button"> & {
+  variant?: "classic" | "outline" | "soft" | "ghost";
+  size?: "sm" | "md" | "lg";
 };
 
-export const Button = ({ variant = "classic", ...props }: ButtonProps) => {
-  return <RadixButton variant={variant} {...props} />;
+export const Button = ({
+  variant = "classic",
+  size = "md",
+  className,
+  disabled,
+  ...props
+}: ButtonProps) => {
+  return (
+    <button
+      className={clsx(
+        styles.button,
+        styles[`button--${variant}`],
+        styles[`button--${size}`],
+        {
+          [styles["button--disabled"]]: disabled,
+        },
+        className,
+      )}
+      disabled={disabled}
+      {...props}
+    />
+  );
 };
