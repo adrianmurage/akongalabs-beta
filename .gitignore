@@ -4,7 +4,7 @@
 # ===============================================
 
 # ===============================================
-# Node.js Dependencies & Package Managers
+# Node Modules & Package Managers
 # ===============================================
 node_modules/
 jspm_packages/
@@ -13,6 +13,8 @@ jspm_packages/
 .yarn/unplugged
 .yarn/build-state.yml
 .yarn/install-state.gz
+bun.lockb
+.bun/
 
 # ===============================================
 # Build Outputs & Distribution
@@ -40,7 +42,7 @@ out/
 .env.*.local
 
 # ===============================================
-# Logs & Debug Files
+# Logs
 # ===============================================
 *.log
 logs/
@@ -50,6 +52,8 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 .pnpm-debug.log*
+bun-debug.log*
+bun-error.log*
 
 # ===============================================
 # Testing & Coverage

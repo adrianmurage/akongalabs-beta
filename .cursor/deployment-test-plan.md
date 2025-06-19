@@ -226,7 +226,7 @@ If deployment fails, document:
 - ✅ **Security middleware implemented** (helmet.js, CORS, rate limiting)
 - ✅ **Complete security headers active** (CSP, HSTS, X-Frame-Options, etc.)
 - ✅ **Production security checklist created** for future deployments
-- Use `SECURITY-CHECKLIST.md` for all future security reviews
+- Use `docs/security-checklist.md` for all future security reviews
 
 ## SECURITY ASSESSMENT RESULTS
 

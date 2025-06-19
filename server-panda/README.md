@@ -21,14 +21,14 @@ git clone git@github.com:Adrian-corp/server-panda.git
 cd server-panda
 
 # install dependencies
-yarn install
+bun install
 
 # Set up environment
-cp .env.example .env
+cp .env.template .env
 # Edit .env with your database URLs
 
 # Start development server
-yarn dev
+bun run dev
 ```
 
 ## Project Overview
@@ -69,16 +69,16 @@ flyctl proxy 5432 -a database-panda-dev
 
 ```bash
 # Start development server with hot reload
-yarn dev
+bun run dev
 
 # Build TypeScript
-yarn tsc
+bun run tsc
 
 # Lint code
-yarn lint
+bun run lint
 
 # Type check
-yarn tsc --noEmit
+bun run tsc --noEmit
 ```
 
 ## API Endpoints
@@ -191,11 +191,11 @@ server-panda/
    - Verify database URLs in `.env`
    - Check database server is running (or Fly.io proxy if using hosted DB)
    - For Fly.io database: Ensure `flyctl proxy 5432 -a database-panda-dev` is running
-   - Test connection: `yarn dev` and visit `/db-health`
+   - Test connection: `bun run dev` and visit `/db-health`
 
 2. **TypeScript Compilation Errors**
 
-   - Run `yarn tsc` to see detailed errors
+   - Run `bun run tsc` to see detailed errors
    - Check `tsconfig.json` configuration
    - Ensure all dependencies are installed
 

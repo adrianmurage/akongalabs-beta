@@ -9,7 +9,7 @@ This checklist ensures production-ready security for the unified working-panda a
 
 ### ✅ **1. Dependencies & Packages**
 - [ ] All dependencies updated to latest secure versions
-- [ ] `yarn audit` run and vulnerabilities addressed
+- [ ] `bun audit` run and vulnerabilities addressed
 - [ ] No dev dependencies in production build
 - [ ] Security packages installed:
   - [ ] `helmet` (security headers)
@@ -157,7 +157,7 @@ This checklist ensures production-ready security for the unified working-panda a
 ### **Quick Security Validation**
 ```bash
 # Check for vulnerabilities
-cd server-panda && yarn audit
+cd server-panda && bun audit
 
 # Test security headers
 curl -I https://your-app.fly.dev/

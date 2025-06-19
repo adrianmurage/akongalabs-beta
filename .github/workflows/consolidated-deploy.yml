@@ -23,43 +23,43 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "22.16.0"
-          cache: "yarn"
-          cache-dependency-path: |
-            server-panda/yarn.lock
-            client-panda/yarn.lock
-            landing-panda/yarn.lock
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
 
       - name: Install server dependencies
         working-directory: server-panda
-        run: yarn install --frozen-lockfile
+        run: bun install --frozen-lockfile
 
       - name: Install React app dependencies
         working-directory: client-panda
-        run: yarn install --frozen-lockfile
+        run: bun install --frozen-lockfile
 
       - name: Install landing site dependencies
         working-directory: landing-panda
-        run: yarn install --frozen-lockfile
+        run: bun install --frozen-lockfile
 
       - name: Lint server code
         working-directory: server-panda
-        run: yarn lint || echo "Linting completed with warnings"
+        run: bun run lint || echo "Linting completed with warnings"
 
       - name: Lint React app
         working-directory: client-panda
-        run: yarn lint || echo "Linting completed with warnings"
+        run: bun run lint || echo "Linting completed with warnings"
 
       - name: Test server build
         working-directory: server-panda
-        run: yarn tsc --noEmit
+        run: bun run tsc --noEmit
 
       - name: Test React app build
         working-directory: client-panda
-        run: yarn build
+        run: bun run build
 
       - name: Test landing site build
         working-directory: landing-panda
-        run: yarn build
+        run: bun run build
 
   deploy-unified:
     name: Deploy Unified App to Fly.io
@@ -76,23 +76,23 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "22.16.0"
-          cache: "yarn"
-          cache-dependency-path: |
-            server-panda/yarn.lock
-            client-panda/yarn.lock
-            landing-panda/yarn.lock
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
 
       - name: Install server dependencies
         working-directory: server-panda
-        run: yarn install --frozen-lockfile
+        run: bun install --frozen-lockfile
 
       - name: Install React app dependencies
         working-directory: client-panda
-        run: yarn install --frozen-lockfile
+        run: bun install --frozen-lockfile
 
       - name: Install landing site dependencies
         working-directory: landing-panda
-        run: yarn install --frozen-lockfile
+        run: bun install --frozen-lockfile
 
       # NOTE: Docker build now handles frontend compilation
       # The multi-stage Dockerfile builds client-panda, landing-panda, and server-panda

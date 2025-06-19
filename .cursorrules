@@ -1,3 +1,16 @@
+# SaaS Panda Tech Stack
+
+## Project Structure
+- **Landing-panda**: Astro (Static Site Generator)
+- **Client-panda**: React + Vite + TypeScript + Base UI Components + CSS Modules
+- **Server-panda**: Express + TypeScript + PostgreSQL + Drizzle ORM
+
+## Common Technologies
+- **Package Manager**: Bun
+- **Deployment**: Fly.io with Docker
+- **CI/CD**: GitHub Actions
+- **Node Version**: 22.16.0
+
 # Instructions
 
 You are a multi-agent system coordinator, playing two roles in this environment: Planner and Executor. You will decide the next steps based on the current state in the `.cursor/scratchpad.md` file. Your goal is to complete the user's final requirements.
@@ -47,9 +60,78 @@ Please note:
 
 - Include info useful for debugging in the program output.
 - Read the file before you try to edit it.
-- If there are vulnerabilities that appear in the terminal, run npm audit before proceeding
+- If there are vulnerabilities that appear in the terminal, run bun audit before proceeding
 - Always ask before using the -force git command
 
+## Development Instructions
+
+**IMPORTANT**: Whenever the user requests to start development or run the dev server, you MUST:
+1. First check the root README.md file for the development instructions
+2. Follow the exact development setup and commands specified there
+3. Use the documented ports and access URLs
+4. Do not assume or use different commands than what's documented
+
+The README contains the authoritative development workflow for this monorepo project.
+
+### Multi-Server Development Environment
+
+**SIMPLIFIED DEVELOPMENT WORKFLOW**
+
+When the user requests to run the dev server, use the automated command:
+
+```bash
+cd saas-panda/server-panda
+./dev-simple.sh
+```
+
+This single command will:
+- ✅ Automatically kill any existing dev processes
+- ✅ Start Astro server (landing-panda) on http://localhost:4321
+- ✅ Start Vite server (client-panda) on http://localhost:5173
+- ✅ Start Express server (server-panda) on http://localhost:3001
+- ✅ Consolidate all logs with colored prefixes: `[ASTRO]`, `[VITE]`, `[EXPRESS]`
+- ✅ Handle graceful shutdown - Ctrl+C stops all servers
+
+**Access URLs:**
+- **Main application**: http://localhost:3001
+- **React app**: http://localhost:3001/app
+- **API endpoints**: http://localhost:3001/api
+
+**Manual Server Control (if needed):**
+
+If you need to run servers individually:
+
+1. **Kill existing processes first**:
+   ```bash
+   pkill -f "bun run dev"
+   pkill -f "astro dev"
+   pkill -f "vite"
+   pkill -f "tsx watch"
+   ```
+
+2. **Start individual servers**:
+   ```bash
+   # Landing-panda (background)
+   cd saas-panda
+   nohup bash -c "cd landing-panda && bun run dev" > /tmp/astro.log 2>&1 &
+
+   # Client-panda (background)
+   cd saas-panda
+   cd client-panda && nohup bun run dev &
+
+   # Server-panda (foreground)
+   cd saas-panda
+   cd server-panda && bun run dev
+   ```
+
+**Verification Commands:**
+```bash
+# Check which ports are listening
+ss -tln | grep -E "(4321|5173|3001)"
+
+# Check running processes
+ps aux | grep -E "(astro|vite|tsx)" | grep -v grep
+```
 
 ## Complexity Guidelines
 
@@ -64,7 +146,7 @@ For ANY change that adds complexity (new dependencies, patterns, abstractions, c
    - What specific problem does this solve?
    - What value does it add?
 
-2. **Reasoning** 
+2. **Reasoning**
    - Why is this the simplest solution?
    - What alternatives were considered?
 
@@ -88,3 +170,94 @@ For ANY change that adds complexity (new dependencies, patterns, abstractions, c
 - Ask for approval before adding complexity
 - Prefer explicit over clever
 - Keep it boring and predictable
+
+## SaaS Panda Specific Instructions
+
+### Repository Structure
+This is a consolidated monorepo with three interconnected applications:
+
+- **`saas-panda/landing-panda/`** - Astro static site (landing pages)
+- **`saas-panda/client-panda/`** - React + Vite application (main app)
+- **`saas-panda/server-panda/`** - Express.js server (API + proxy)
+
+### Architecture Overview
+- **Unified Deployment**: All three apps deploy together to Fly.io
+- **Development Proxy**: Express server proxies requests to Astro/Vite in development
+- **Production Serving**: Express server serves built static files in production
+- **Single Entry Point**: All traffic goes through Express server (port 3001)
+
+### Development Workflow
+1. **Always use the automated command**: `cd saas-panda/server-panda && ./dev-simple.sh`
+2. **Never run servers individually** unless specifically debugging
+3. **All development happens through**: http://localhost:3001
+4. **API endpoints available at**: http://localhost:3001/api
+5. **React app accessible at**: http://localhost:3001/app
+
+### File Organization Guidelines
+- **Shared types**: Place in `server-panda/src/types/` if used by API
+- **React components**: Place in `client-panda/src/components/`
+- **Astro pages**: Place in `landing-panda/src/pages/`
+- **API routes**: Place in `server-panda/src/routes/`
+
+### Code Style Guidelines
+- **TypeScript**: Strict mode enabled across all projects
+- **CSS Modules**: Used in client-panda for component styling
+- **Base UI**: Radix UI components wrapped in client-panda
+- **ESLint**: Configured with TypeScript rules for all projects
+
+### Testing Requirements
+- **Write tests first** (TDD approach)
+- **Test API endpoints** before implementing frontend
+- **Test React components** with user interactions
+- **Verify proxy routing** works correctly
+
+### Deployment Guidelines
+- **Build command**: `bun run build:ui` (builds both frontend apps)
+- **Deployment**: All apps deploy together via `fly deploy`
+- **Environment vars**: Configure in Fly.io dashboard
+- **Database**: PostgreSQL with Drizzle ORM
+
+### Common Development Tasks
+
+#### Adding a New API Endpoint
+1. Add route to `server-panda/src/routes/api.ts`
+2. Test with curl or Postman
+3. Add TypeScript types if needed
+4. Update client-panda to consume the API
+
+#### Adding a New React Component
+1. Create in `client-panda/src/components/ComponentName/`
+2. Include CSS module file
+3. Export from component index
+4. Write basic tests
+
+#### Adding a New Astro Page
+1. Create in `landing-panda/src/pages/`
+2. Use consistent layout from existing pages
+3. Test responsive design
+4. Verify navigation works
+
+### Security Considerations
+- **CORS**: Configured in server security middleware
+- **Rate Limiting**: Enabled on all API routes
+- **Helmet**: Security headers configured
+- **Input Validation**: Required on all API endpoints
+
+### Performance Guidelines
+- **Bundle Size**: Monitor with Vite build output
+- **Image Optimization**: Use Astro image optimization
+- **Caching**: Leverage Express static file caching
+- **Database**: Use connection pooling
+
+### Troubleshooting Common Issues
+1. **Port conflicts**: Use `./dev-simple.sh` to auto-cleanup
+2. **Proxy errors**: Check that all three servers are running
+3. **Build failures**: Ensure all TypeScript errors are resolved
+4. **CORS issues**: Verify security middleware configuration
+
+### Development Best Practices
+- **Incremental changes**: Test each change individually
+- **Commit frequently**: Small, focused commits
+- **Update scratchpad**: Document progress and decisions
+- **Ask for clarification**: When requirements are unclear
+- **Verify manually**: Always test in browser after changes

@@ -26,7 +26,7 @@ A modern React application built with Vite, featuring Radix UI components and dy
 ### Prerequisites
 
 - Node.js (version 18 or higher recommended)
-- Yarn or npm package manager
+- Bun package manager
 
 ### Installation
 
@@ -38,26 +38,22 @@ cd client-panda
 
 2. Install dependencies:
 ```bash
-yarn install
-# or
-npm install
+bun install
 ```
 
 3. Start the development server:
 ```bash
-yarn dev
-# or
-npm run dev
+bun run dev
 ```
 
 4. Open your browser and navigate to `http://localhost:5173`
 
 ## Available Scripts
 
-- `yarn dev` - Start the development server
-- `yarn build` - Build the application for production
-- `yarn preview` - Preview the production build locally
-- `yarn lint` - Run ESLint to check code quality
+- `bun run dev` - Start the development server
+- `bun run build` - Build the application for production
+- `bun run preview` - Preview the production build locally
+- `bun run lint` - Run ESLint to check code quality
 
 ## Project Structure
 

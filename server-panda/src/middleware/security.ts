@@ -77,7 +77,7 @@ export function setupSecurityMiddleware(app: Application): void {
       // In production, you should specify allowed origins
       const allowedOrigins = [
         "https://working-panda-unified.fly.dev",
-        "http://localhost:3000", // React dev server
+        "http://localhost:5173", // React dev server
         "http://localhost:4321", // Astro dev server
         "http://localhost:3001", // Express server
       ];

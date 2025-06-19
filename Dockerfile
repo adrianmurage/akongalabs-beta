@@ -14,8 +14,9 @@ LABEL app_name="working-panda-unified"
 
 # Set production environment
 ENV NODE_ENV="production"
-ARG YARN_VERSION=1.22.22
-RUN npm install -g yarn@$YARN_VERSION --force
+# Install bun
+RUN curl -fsSL https://bun.sh/install | bash
+ENV PATH="/root/.bun/bin:${PATH}"
 
 # Install packages needed to build node modules and frontend apps
 RUN apt-get update -qq && \
@@ -30,14 +31,14 @@ FROM base AS build-client
 WORKDIR /workspace/client-panda
 
 # Copy client package files
-COPY client-panda/package.json client-panda/yarn.lock ./
-RUN yarn install --frozen-lockfile --production=false
+COPY client-panda/package.json client-panda/bun.lock* ./
+RUN bun install --frozen-lockfile
 
 # Copy client source code
 COPY client-panda/ ./
 
 # Build React application
-RUN yarn build
+RUN bun run build
 
 # =============================================
 # Frontend Build Stage - Landing Panda (Astro)
@@ -47,14 +48,14 @@ FROM base AS build-landing
 WORKDIR /workspace/landing-panda
 
 # Copy landing package files
-COPY landing-panda/package.json landing-panda/yarn.lock ./
-RUN yarn install --frozen-lockfile --production=false
+COPY landing-panda/package.json landing-panda/bun.lock* ./
+RUN bun install --frozen-lockfile
 
 # Copy landing source code
 COPY landing-panda/ ./
 
 # Build Astro application
-RUN yarn build
+RUN bun run build
 
 # =============================================
 # Server Build Stage
@@ -64,8 +65,8 @@ FROM base AS build-server
 WORKDIR /app
 
 # Copy server package files
-COPY server-panda/package.json server-panda/yarn.lock ./
-RUN yarn install --frozen-lockfile --production=false
+COPY server-panda/package.json server-panda/bun.lock* ./
+RUN bun install --frozen-lockfile
 
 # Copy server source code
 COPY server-panda/ ./
@@ -78,7 +79,7 @@ COPY --from=build-landing /workspace/landing-panda/dist ./landing-panda/dist
 LABEL cache_bust=$CACHE_BUST
 
 # Build TypeScript server
-RUN yarn tsc
+RUN bun run tsc
 
 # =============================================
 # Production Stage
@@ -88,9 +89,8 @@ FROM base AS production
 WORKDIR /app
 
 # Copy server package files for production dependencies only
-COPY server-panda/package.json server-panda/yarn.lock ./
-RUN yarn install --frozen-lockfile --production=true && \
-    yarn cache clean
+COPY server-panda/package.json server-panda/bun.lock* ./
+RUN bun install --frozen-lockfile --production
 
 # Copy built server application
 COPY --from=build-server /app/build ./build

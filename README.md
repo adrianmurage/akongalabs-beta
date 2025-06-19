@@ -7,12 +7,11 @@ A unified development environment containing three interconnected projects: a mo
 This consolidated repository contains three distinct but related projects:
 
 ```
-working-panda/
+saas-panda/
 ├── client-panda/        # React Application (Frontend)
 ├── landing-panda/       # Astro Landing Site
 ├── server-panda/        # Express.js Server (Backend)
-├── .cursor/             # Development tools and planning
-└── .backups/            # Repository consolidation backups
+└── .cursor/             # Development tools and planning
 ```
 
 ## 📋 Projects Overview
@@ -20,17 +19,18 @@ working-panda/
 ### 🎨 Client Panda - React Application
 **Location**: `./client-panda/`
 
-A modern React application built with Vite, featuring Radix UI components and dynamic theme switching capabilities.
+A modern React application built with Vite, featuring Base UI components and CSS Modules architecture.
 
 **Features**:
 - ⚡ Fast development with Vite and Hot Module Replacement
-- 🎨 Modern UI built with Radix UI Themes
-- 🌙 Light/dark mode theme switching
+- 🎨 Modern UI built with Base UI components and CSS Modules
+- 🌙 Light/dark mode theme switching via CSS variables
 - 📱 Responsive, mobile-first design
 - 🔧 Full TypeScript support
 - 🧹 ESLint configuration with React-specific rules
+- 🎯 Conditional styling with clsx utility
 
-**Tech Stack**: React 19, Vite 6, Radix UI Themes, next-themes, TypeScript
+**Tech Stack**: React 19, Vite 6, Base UI Components, CSS Modules, clsx, TypeScript
 
 ### 🚀 Landing Panda - Astro Site
 **Location**: `./landing-panda/`
@@ -68,31 +68,31 @@ A production-ready Express.js server built with TypeScript, PostgreSQL, and Dock
 - Node.js 22.16.0 or higher
 - PostgreSQL (for server-panda)
 - Docker (optional, for containerized deployment)
-- Yarn or npm package manager
+- Bun package manager
 
 ### Installation
 
 1. **Clone and setup the repository**:
 ```bash
 git clone <your-repo-url>
-cd working-panda
+cd saas-panda
 ```
 
 2. **Install dependencies for each project**:
 ```bash
 # React Application
 cd client-panda
-yarn install
+bun install
 cd ..
 
 # Astro Landing Site
 cd landing-panda
-yarn install
+bun install
 cd ..
 
 # Express Server
 cd server-panda
-yarn install
+bun install
 cd ..
 ```
 
@@ -103,26 +103,49 @@ Each project can be developed independently:
 #### React Application (client-panda)
 ```bash
 cd client-panda
-yarn dev          # Start development server (http://localhost:5173)
-yarn build        # Build for production
-yarn preview      # Preview production build
+bun run dev       # Start development server (http://localhost:5173)
+bun run build     # Build for production
+bun run preview   # Preview production build
 ```
 
 #### Astro Landing Site (landing-panda)
 ```bash
 cd landing-panda
-yarn dev          # Start development server (http://localhost:4321)
-yarn build        # Build for production
-yarn preview      # Preview production build
+bun run dev       # Start development server (http://localhost:4321)
+bun run build     # Build for production
+bun run preview   # Preview production build
 ```
 
 #### Express Server (server-panda)
 ```bash
 cd server-panda
-yarn dev          # Start development server with hot reload
-yarn build        # Build TypeScript to JavaScript
-yarn start        # Start production server
+./dev-simple.sh   # Start ALL development servers with consolidated logging
+bun run dev       # Start only Express server with hot reload
+bun run build     # Build TypeScript to JavaScript
+bun run start     # Start production server
 ```
+
+### 🚀 Simplified Development Workflow
+
+**Recommended**: Use the automated development command to start all servers:
+
+```bash
+cd server-panda
+./dev-simple.sh
+```
+
+This single command will:
+- ✅ Automatically kill any existing dev processes
+- ✅ Start Astro server (landing-panda) on http://localhost:4321
+- ✅ Start Vite server (client-panda) on http://localhost:5173
+- ✅ Start Express server (server-panda) on http://localhost:3001
+- ✅ Consolidate all logs with colored prefixes: `[ASTRO]`, `[VITE]`, `[EXPRESS]`
+- ✅ Handle graceful shutdown - Ctrl+C stops all servers
+
+**Access the application**:
+- **Main landing page**: http://localhost:3001
+- **React application**: http://localhost:3001/app
+- **API endpoints**: http://localhost:3001/api
 
 ## 🏛️ Architecture
 
@@ -163,14 +186,18 @@ Each project requires its own environment configuration:
 
 #### server-panda/.env
 ```env
+# Copy from template and customize
+cp server-panda/.env.template server-panda/.env
+
+# Example configuration:
 DATABASE_URL=postgresql://username:password@localhost:5432/database
-PORT=3000
+PORT=3001
 NODE_ENV=development
 ```
 
 #### client-panda/.env
 ```env
-VITE_API_URL=http://localhost:3000
+VITE_API_URL=http://localhost:3001
 ```
 
 ### Docker Support
@@ -180,16 +207,26 @@ The server project includes Docker configuration:
 ```bash
 cd server-panda
 docker build -t server-panda .
-docker run -p 3000:3000 server-panda
+docker run -p 3001:3001 server-panda
 ```
 
 ## 📚 Documentation
 
-Detailed documentation for each project can be found in their respective directories:
+### **📋 Complete Documentation Hub**
+- **[📚 Documentation Index](./docs/README.md)** - Complete documentation hub and navigation guide
 
-- [React App Documentation](./client-panda/README.md)
-- [Astro Site Documentation](./landing-panda/README.md)
-- [Express Server Documentation](./server-panda/README.md)
+### **🔧 Development & Operations**
+- **[Development Guide](./docs/development.md)** - Local development setup and troubleshooting
+- **[CI/CD Documentation](./docs/ci-cd.md)** - GitHub Actions workflows and deployment
+
+### **🛡️ Security Documentation**
+- **[Security Overview](./docs/security-index.md)** - Security implementation and guidelines
+- **[Security Checklist](./docs/security-checklist.md)** - Pre-deployment security validation
+
+### **📁 Project-Specific Documentation**
+- **[React App Documentation](./client-panda/README.md)** - Client-panda setup and features
+- **[Astro Site Documentation](./landing-panda/README.md)** - Landing-panda configuration
+- **[Express Server Documentation](./server-panda/README.md)** - Server-panda API and deployment
 
 ## 🤝 Development Workflow
 
@@ -217,7 +254,7 @@ All applications are deployed together as a single unit to Fly.io:
 ```bash
 # Build and deploy everything together
 cd server-panda
-yarn build:ui    # Builds React app and Astro site, copies to server directory
+bun run build:ui # Builds React app and Astro site, copies to server directory
 fly deploy       # Deploys Express server with integrated frontend apps
 ```
 
@@ -227,9 +264,9 @@ The server provides granular build commands for flexibility:
 
 ```bash
 # Build individual applications
-yarn build:client   # Builds only the React application
-yarn build:landing  # Builds only the Astro landing site
-yarn build:ui       # Builds both applications (calls build:client && build:landing)
+bun run build:client   # Builds only the React application
+bun run build:landing  # Builds only the Astro landing site
+bun run build:ui       # Builds both applications (calls build:client && build:landing)
 ```
 
 The `build:ui` script automatically:
@@ -242,7 +279,7 @@ The `build:ui` script automatically:
 
 The GitHub Actions workflow:
 - Builds and tests all projects
-- Runs the unified build process (`yarn build:ui`)
+- Runs the unified build process (`bun run build:ui`)
 - Deploys everything to Fly.io in a single deployment
 - No separate hosting providers needed
 

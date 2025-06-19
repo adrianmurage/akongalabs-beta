@@ -8,7 +8,7 @@ When running the development servers, always use **localhost** instead of **0.0.
 
 ```bash
 # Start all development servers
-cd server-panda && npm run dev
+cd server-panda && bun run dev
 
 # Access the application
 http://localhost:3001       # Main entry point
@@ -58,7 +58,7 @@ taskkill /PID <PID> /F
 1. **Start the main server** (includes proxy to other services):
    ```bash
    cd server-panda
-   npm run dev
+   bun run dev
    ```
 
 2. **In development, the Express server proxies**:
@@ -97,11 +97,11 @@ DISABLE_RATE_LIMIT_DEV=true       # Disable rate limiting in development (defaul
 1. **Check all servers are running**:
    ```bash
    # Check Express server logs
-   cd server-panda && npm run dev
+   cd server-panda && bun run dev
    
    # In separate terminals if needed:
-   cd client-panda && npm run dev
-   cd landing-panda && npm run dev
+   cd client-panda && bun run dev
+   cd landing-panda && bun run dev
    ```
 
 2. **Verify proxy is working**:

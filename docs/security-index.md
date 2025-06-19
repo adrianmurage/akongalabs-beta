@@ -12,9 +12,9 @@ This index provides quick access to all security documentation and resources for
 ## 📚 **SECURITY DOCUMENTATION LIBRARY**
 
 ### **🔧 Implementation Documentation**
-- **[SECURITY-CHECKLIST.md](./SECURITY-CHECKLIST.md)** - Complete security checklist for deployments
-- **[FUTURE-SECURITY-ENHANCEMENTS.md](./FUTURE-SECURITY-ENHANCEMENTS.md)** - Planned security improvements
-- **[.cursor/deployment-test-plan.md](./.cursor/deployment-test-plan.md)** - Security testing results and validation
+- **[security-checklist.md](./security-checklist.md)** - Complete security checklist for deployments
+- **[FUTURE-SECURITY-ENHANCEMENTS.md](../.cursor/FUTURE-SECURITY-ENHANCEMENTS.md)** - Planned security improvements
+- **[deployment-test-plan.md](../.cursor/deployment-test-plan.md)** - Security testing results and validation
 
 ### **🛡️ Active Security Implementation**
 - **[server-panda/src/middleware/security.ts](./server-panda/src/middleware/security.ts)** - Security middleware implementation
@@ -71,12 +71,12 @@ This index provides quick access to all security documentation and resources for
 - [ ] Monitor health check status
 
 ### **Monthly**
-- [ ] Run `yarn audit` for dependency vulnerabilities
+- [ ] Run `bun audit` for dependency vulnerabilities
 - [ ] Review security headers with curl tests
 - [ ] Update dependencies with security patches
 
 ### **Quarterly**
-- [ ] Complete SECURITY-CHECKLIST.md review
+- [ ] Complete security-checklist.md review
 - [ ] Assess future enhancements from planning document
 - [ ] Conduct security training review
 
@@ -95,7 +95,7 @@ This index provides quick access to all security documentation and resources for
 curl -I https://working-panda-unified.fly.dev/
 
 # Check for vulnerabilities
-cd server-panda && yarn audit
+cd server-panda && bun audit
 
 # Test rate limiting
 for i in {1..5}; do curl -s -I https://working-panda-unified.fly.dev/api/health | grep ratelimit-remaining; done
@@ -132,7 +132,7 @@ openssl s_client -connect working-panda-unified.fly.dev:443 -servername working-
 ## 🛠️ **DEVELOPMENT GUIDELINES**
 
 ### **Before Adding New Features**
-1. Review relevant sections in SECURITY-CHECKLIST.md
+1. Review relevant sections in security-checklist.md
 2. Consider security implications of new endpoints/functionality
 3. Update security middleware if handling sensitive data
 4. Test security headers after changes

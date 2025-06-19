@@ -1176,9 +1176,387 @@ User requested analysis of whether Base UI (https://base-ui.com/react/overview/q
 - **Base UI Integration**: ✅ Dialog component successfully integrated as proof of concept
 - **Build Status**: ✅ Production build successful (398.55 kB, gzipped: 131.40 kB)
 
+## THEMING ISSUE - CLIENT-PANDA AFTER BASE UI MIGRATION 🔧
+
+### Background and Motivation
+The theming functionality in client-panda has stopped working after implementing Base UI. User reports that the theme switching mechanism is no longer functional. Need to investigate and restore theming capabilities.
+
+### Key Challenges and Analysis
+
+#### Technical Challenges
+1. **Theme Provider Removal**: The @radix-ui/themes Theme provider was removed during Base UI migration
+2. **next-themes Integration**: Need to verify if next-themes was properly integrated or if it was dependent on Radix UI
+3. **Base UI Theming**: Base UI components are unstyled by default and may not respect theme context
+4. **CSS Variables**: Theme switching likely depends on CSS variables that may need reconfiguration
+
+#### Complexity Analysis
+**Benefits of fixing**:
+- Restore dark/light mode functionality
+- Maintain user experience consistency
+- Enable theme persistence across sessions
+
+**Reasoning**:
+- Theming is a core feature that affects user experience
+- next-themes is a lightweight, framework-agnostic solution
+- Can be implemented without adding complexity
+
+**Demerits**:
+- May require refactoring component styles
+- Need to ensure all Base UI components respect theme
+
+**Maintainability Impact**:
+- Standard theming pattern widely understood
+- next-themes is well-documented and maintained
+
+### High-level Task Breakdown
+
+#### Phase 1: Investigation (15 mins)
+- [ ] **Task 1.1**: Check if next-themes is installed and configured
+  - Success Criteria: Understand current theming setup status
+- [ ] **Task 1.2**: Verify theme-related CSS variables in stylesheets
+  - Success Criteria: Identify which CSS variables are used for theming
+- [ ] **Task 1.3**: Locate theme toggle component/mechanism
+  - Success Criteria: Find where theme switching was implemented
+
+#### Phase 2: Implementation (30 mins)
+- [ ] **Task 2.1**: Install/configure next-themes if missing
+  - Success Criteria: ThemeProvider properly wrapping app
+- [ ] **Task 2.2**: Implement theme toggle component
+  - Success Criteria: Working theme switcher UI
+- [ ] **Task 2.3**: Update CSS to respect theme variables
+  - Success Criteria: Components change appearance with theme
+
+#### Phase 3: Testing (15 mins)
+- [ ] **Task 3.1**: Test theme persistence across page reloads
+  - Success Criteria: Selected theme persists in localStorage
+- [ ] **Task 3.2**: Verify all components respect theme
+  - Success Criteria: Consistent theming across all UI elements
+- [ ] **Task 3.3**: Test theme transitions
+  - Success Criteria: Smooth transitions between themes
+
+### Project Status Board
+
+#### To Do
+
+#### In Progress
+
+#### Done
+- [x] Check next-themes installation status - ✅ next-themes v0.4.6 is installed
+- [x] Investigate theme CSS variables - ✅ Found proper CSS variables in global.css with dark theme overrides
+- [x] Find theme toggle implementation - ✅ ThemeChanger component exists and is used in App.tsx
+- [x] Configure ThemeProvider - ✅ Fixed attribute mismatch (changed from "class" to "data-theme")
+- [x] Implement theme switcher - ✅ Already implemented, just needed attribute fix
+- [x] Update component styles - ✅ No changes needed, CSS already uses correct selectors
+- [x] Test theme functionality - ✅ Build successful, components verified to use theme variables
+- [x] Verify all components respect theme - ✅ All components use CSS variables from global.css
+
+### Current Status / Progress Tracking
+
+**Investigation Results:**
+- next-themes was properly installed and ThemeProvider was configured
+- ThemeChanger component was already implemented and integrated in App.tsx
+- Root cause identified: ThemeProvider was using `attribute="class"` but CSS was expecting `[data-theme="dark"]`
+
+**Fix Applied:**
+- Changed ThemeProvider attribute from "class" to "data-theme" in main.tsx
+- This simple change restored theme functionality
+- Build successful: 398.03 kB (gzip: 131.15 kB)
+
+**Component Verification:**
+- ✅ Button.module.css uses theme-aware CSS variables
+- ✅ Stats.module.css uses theme-aware CSS variables  
+- ✅ App.module.css uses theme-aware CSS variables
+- ✅ All components properly reference CSS variables from global.css
+
+**Theme System Architecture:**
+- global.css defines all CSS variables with `:root` for light theme
+- `[data-theme="dark"]` selector provides dark theme overrides
+- All component styles use CSS variables ensuring automatic theme support
+- Smooth transitions configured for theme changes
+
+## THEMING FIX COMPLETED ✅
+
+### Summary
+Successfully restored theming functionality in client-panda by fixing the attribute mismatch between ThemeProvider and CSS selectors. The fix was a one-line change in main.tsx, changing `attribute="class"` to `attribute="data-theme"`. All components are properly theme-aware through CSS variables.
+
+## Executor's Feedback or Assistance Requests
+
+**Task Complete**: The theming issue has been resolved. The root cause was a simple configuration mismatch that has been corrected. All components are verified to use theme-aware CSS variables. 
+
+Ready for user to test theme switching functionality in the browser to confirm the fix is working as expected.
+
+## NPM/YARN TO BUN MIGRATION PROJECT
+
+### Background and Motivation
+
+The user wants to clean up all npm and yarn references across the saas-panda monorepo and move fully to bun as the package manager. Additionally, they want to update the root .cursorrules file to accurately reflect the tech stack across landing-panda, client-panda, and server-panda, and remove any nested .cursorrules files to maintain only one at the root.
+
+**Current State:**
+- All three projects (client-panda, landing-panda, server-panda) currently use yarn
+- yarn.lock files exist in all three directories
+- Package scripts reference yarn commands
+- Dockerfile uses yarn for installation and builds
+- CI/CD workflows use yarn commands
+- Documentation references npm and yarn commands
+- Three .cursorrules files exist (root, client-panda, server-panda)
+
+### Key Challenges and Analysis
+
+#### Technical Challenges
+
+1. **Package Manager Migration**
+   - Replace all yarn.lock files with bun.lockb
+   - Update all package.json scripts that reference yarn
+   - Modify Dockerfile to use bun instead of yarn
+   - Update CI/CD workflows to use bun
+   - Update all documentation
+
+2. **Build System Integration**
+   - Ensure bun compatibility with existing build tools (Vite, Astro, TypeScript)
+   - Verify all dependencies work correctly with bun
+   - Test development and production builds
+
+3. **.cursorrules Consolidation**
+   - Merge relevant content from nested .cursorrules
+   - Update tech stack information to be accurate
+   - Remove nested .cursorrules files
+
+#### Complexity Analysis
+
+**Benefits:**
+- Single package manager reduces confusion
+- Bun is faster than npm/yarn for installations
+- Simplified developer experience
+- Accurate .cursorrules improves AI assistance
+
+**Reasoning:**
+- Bun is a drop-in replacement for npm/yarn
+- Minimal configuration changes required
+- Straightforward migration path
+
+**Demerits:**
+- Team needs to install bun locally
+- Potential compatibility issues with some packages
+- CI/CD environment needs bun installation
+
+**Maintainability Impact:**
+- Simpler toolchain with one package manager
+- Faster CI/CD builds
+- Consistent commands across all projects
+
+### High-level Task Breakdown
+
+#### Phase 1: Preparation and Analysis (30 mins)
+- [ ] **Task 1.1**: Install bun locally and verify compatibility
+  - Success Criteria: Bun installed and can run basic commands
+  - Verification: `bun --version` works
+
+- [ ] **Task 1.2**: Test bun with each project individually
+  - Success Criteria: Can install dependencies with bun in each project
+  - Verification: `bun install` works in each directory without errors
+
+- [ ] **Task 1.3**: Document any compatibility issues
+  - Success Criteria: List of any packages that might have issues
+  - Verification: All potential issues documented
+
+#### Phase 2: Migration Implementation (1 hour)
+- [ ] **Task 2.1**: Remove yarn.lock files and generate bun.lockb
+  - Success Criteria: yarn.lock files deleted, bun.lockb files created
+  - Verification: `bun install` generates lockfiles in all projects
+
+- [ ] **Task 2.2**: Update package.json scripts
+  - Success Criteria: All yarn references replaced with bun
+  - Verification: Scripts work with bun commands
+
+- [ ] **Task 2.3**: Update Dockerfile for bun
+  - Success Criteria: Docker build uses bun instead of yarn
+  - Verification: Docker build completes successfully
+
+- [ ] **Task 2.4**: Update CI/CD workflows
+  - Success Criteria: GitHub Actions use bun
+  - Verification: Workflow files updated with bun commands
+
+#### Phase 3: Documentation Updates (30 mins)
+- [ ] **Task 3.1**: Update README.md files
+  - Success Criteria: All npm/yarn commands replaced with bun
+  - Verification: No npm/yarn references remain in docs
+
+- [ ] **Task 3.2**: Update DEVELOPMENT.md
+  - Success Criteria: Development instructions use bun
+  - Verification: Instructions are clear and accurate
+
+- [ ] **Task 3.3**: Update any other documentation
+  - Success Criteria: All docs reflect bun usage
+  - Verification: Grep shows no npm/yarn command references
+
+#### Phase 4: .cursorrules Consolidation (30 mins)
+- [ ] **Task 4.1**: Update root .cursorrules with accurate tech stack
+  - Success Criteria: Tech stack section added with correct information
+  - Verification: File reflects actual technologies used
+
+- [ ] **Task 4.2**: Remove nested .cursorrules files
+  - Success Criteria: Only root .cursorrules remains
+  - Verification: No .cursorrules in subdirectories
+
+- [ ] **Task 4.3**: Test AI assistance with updated rules
+  - Success Criteria: AI understands project structure correctly
+  - Verification: Test prompts work as expected
+
+### Project Status Board
+
+#### To Do
+- [ ] Test AI assistance with updated rules
+
+#### In Progress
+
+#### Done
+- [x] Install bun locally and verify compatibility
+- [x] Test bun with each project individually
+- [x] Document any compatibility issues
+- [x] Remove yarn.lock files and generate bun.lockb
+- [x] Update package.json scripts
+- [x] Update Dockerfile for bun
+- [x] Update CI/CD workflows
+- [x] Update README.md files
+- [x] Update DEVELOPMENT.md
+- [x] Update any other documentation
+- [x] Update root .cursorrules with accurate tech stack
+- [x] Remove nested .cursorrules files
+
+### Current Status / Progress Tracking
+
+**Status**: Migration completed successfully! All npm/yarn references have been replaced with bun.
+
+**Implementation Summary:**
+- ✅ Bun installed and tested successfully with all three projects
+- ✅ All yarn.lock files removed and replaced with bun.lock files
+- ✅ All package-lock.json files removed (client-panda and server-panda)
+- ✅ Package.json scripts updated to use bun
+- ✅ Dockerfile updated to install and use bun
+- ✅ GitHub Actions workflow updated with bun setup and commands
+- ✅ All documentation updated (README.md, DEVELOPMENT.md, project-specific READMEs)
+- ✅ Root .cursorrules updated with accurate tech stack information
+- ✅ Nested .cursorrules files removed (client-panda and server-panda)
+- ✅ Build tests passed for all projects (client-panda, landing-panda, server-panda)
+
+**Key Changes Made:**
+1. **Lock Files**: Replaced yarn.lock with bun.lock in all projects, removed package-lock.json files
+2. **Scripts**: Updated package.json in server-panda to use `bun run` instead of `yarn`
+3. **Docker**: Added bun installation via curl, updated all install and build commands
+4. **CI/CD**: Added bun setup action, removed yarn cache, updated all commands
+5. **Documentation**: Replaced all npm/yarn references with bun equivalents
+6. **.cursorrules**: Added tech stack section at root, deleted nested files
+
+**Verification Results:**
+- `bun install` works in all directories
+- `bun run build` successful for client-panda (Vite + React)
+- `bun run build` successful for landing-panda (Astro)
+- `bun run tsc` successful for server-panda (TypeScript)
+
+### Success Criteria Summary
+
+1. **No npm/yarn references remain** in:
+   - Package.json scripts
+   - Dockerfile
+   - CI/CD workflows
+   - Documentation files
+   - Shell scripts
+
+2. **Bun is fully functional** for:
+   - Installing dependencies
+   - Running dev servers
+   - Building for production
+   - All existing scripts
+
+3. **.cursorrules is consolidated** with:
+   - Only one file at root level
+   - Accurate tech stack information
+   - No nested .cursorrules files
+
+4. **All projects work correctly** with:
+   - Development builds
+   - Production builds
+   - Docker containers
+   - CI/CD pipelines
+
+### Implementation Notes
+
+**Key Files to Modify:**
+1. Package.json files (3 files)
+2. Dockerfile
+3. .github/workflows/consolidated-deploy.yml
+4. README.md
+5. DEVELOPMENT.md
+6. .cursorrules (update)
+7. .cursorrules in subdirectories (delete)
+
+**Bun Installation in Docker:**
+```dockerfile
+# Install bun
+RUN curl -fsSL https://bun.sh/install | bash
+ENV PATH="/root/.bun/bin:${PATH}"
+```
+
+**Tech Stack for .cursorrules:**
+- **Landing-panda**: Astro (Static Site Generator)
+- **Client-panda**: React + Vite + TypeScript + Base UI Components
+- **Server-panda**: Express + TypeScript + PostgreSQL + Drizzle ORM
+- **Package Manager**: Bun
+- **Deployment**: Fly.io with Docker
+- **Styling**: CSS Modules
+
+## NPM/YARN TO BUN MIGRATION COMPLETED ✅
+
+### Migration Summary
+
+The project has been successfully migrated from npm/yarn to bun as the package manager. All references have been updated and the projects are building successfully.
+
+**What was changed:**
+- Removed all yarn.lock and package-lock.json files and generated bun.lock files
+- Updated all package.json scripts to use bun
+- Modified Dockerfile to install and use bun
+- Updated GitHub Actions workflows
+- Updated all documentation files
+- Consolidated .cursorrules to root directory only
+
+**Ready for:** Testing the full deployment pipeline with bun.
+
+## REPOSITORY AUDIT COMPLETED ✅
+
+### Final Audit Results
+
+A comprehensive audit of the repository confirms that the npm/yarn to bun migration is complete and the repository is properly cleaned up.
+
+**Audit Findings:**
+1. **Lock Files**: Only bun.lock files exist (no yarn.lock or package-lock.json files)
+2. **Package Scripts**: All package.json scripts use bun commands
+3. **Documentation**: All active documentation updated to use bun
+4. **CI/CD**: GitHub Actions workflow fully configured for bun
+5. **Docker**: Dockerfile properly installs and uses bun
+6. **.cursorrules**: Single file at root with accurate tech stack
+7. **Git Ignore**: Updated with bun-specific entries
+
+**Files Updated During Audit:**
+- README.md - Updated prerequisites to list Bun
+- client-panda/README.md - Updated prerequisites
+- SECURITY-CHECKLIST.md - Changed yarn audit to bun audit
+- SECURITY-INDEX.md - Updated audit commands
+- landing-panda/README.md - Updated create command
+- .gitignore - Added bun-specific entries
+- .dockerignore - Added bun-specific entries
+- .cursor/FUTURE-SECURITY-ENHANCEMENTS.md - Updated package installation commands
+
+**Remaining References:**
+- Historical references in .cursor/scratchpad.md (part of project history)
+- Generic npm/yarn entries in .gitignore files (kept for compatibility)
+
+**Repository Status**: ✅ CLEAN - Ready for production use with Bun
+
 ## Lessons
 
 - **Git Repository Consolidation Best Practices**: Always create backups before attempting repository merges
+- **Bun Migration**: Bun creates `bun.lock` files (not `bun.lockb` as initially expected)
+- **Bun Compatibility**: Bun works seamlessly with Vite, Astro, and TypeScript build tools
 - **History Preservation**: Use `git subtree add` for maintaining commit history - works excellently for this use case
 - **Project Structure**: Keep original project directories to minimize conflicts and maintain clarity
 - **Subtree Method**: `git subtree add --prefix=<dir> <remote> <branch>` successfully preserves full commit history
@@ -1189,3 +1567,271 @@ User requested analysis of whether Base UI (https://base-ui.com/react/overview/q
 - **Documentation Accuracy**: Keep documentation synchronized with actual implementation
 - **Build Process Integration**: Use existing build scripts (`build:ui`) rather than recreating deployment logic
 - **Verification Testing**: Always test build processes and deployment workflows before considering complete
+
+## PROXY ERROR RESOLUTION - DEVELOPMENT SERVER CONFIGURATION 🔧
+
+### Background and Motivation
+
+The user encountered a proxy error when running the development servers: "Error occurred while trying to proxy: localhost:3001/". This indicates an issue with the Express server's proxy middleware configuration in development mode.
+
+### Key Challenges and Analysis
+
+#### Technical Challenges
+
+1. **Port Configuration Mismatch**: The server port was inconsistent across different configuration files
+2. **Proxy Middleware Setup**: The current proxy configuration may have circular dependencies or incorrect routing
+3. **Development Server Coordination**: Three servers need to run in harmony (Astro on 4321, React on 5173, Express on 3001)
+4. **Request Routing Logic**: Ensuring proper routing between API, React app, and Astro landing pages
+
+#### Complexity Analysis
+
+**Benefits of fixing this issue:**
+- Enables proper development environment for all three applications
+- Allows seamless routing between landing page, app, and API
+- Maintains the unified architecture in development mode
+
+**Reasoning:**
+- The proxy setup is essential for mimicking production behavior in development
+- Current configuration appears to have a routing conflict
+
+**Demerits:**
+- None - this is a critical fix for development workflow
+
+**Maintainability Impact:**
+- Proper proxy configuration will make development smoother for all team members
+
+### High-level Task Breakdown
+
+#### Phase 1: Diagnosis and Analysis (15 mins)
+
+**Task 1.1: Identify Current Port Configuration**
+- Review server configuration files
+- Check environment variables
+- Verify each application's port settings
+- Success Criteria: Clear understanding of port assignments and conflicts
+
+**Task 2.1: Analyze Proxy Middleware Logic**
+- Review proxy.ts configuration
+- Check for circular proxy references
+- Understand request routing paths
+- Success Criteria: Identify the root cause of the proxy error
+
+#### Phase 2: Fix Implementation (30 mins)
+
+**Task 2.1: Update Server Configuration**
+- Fix port configuration to use PORT 3001 consistently across all files
+- Update proxy middleware to prevent circular references
+- Ensure proper routing hierarchy
+- Success Criteria: No proxy errors when starting development servers
+
+**Task 2.2: Test Development Environment**
+- Start all three servers in correct order
+- Verify landing page loads at localhost:3001
+- Verify React app loads at localhost:3001/app
+- Verify API endpoints work at localhost:3001/api
+- Success Criteria: All applications accessible through Express server
+
+#### Phase 3: Documentation Update (15 mins)
+
+**Task 3.1: Update Configuration Documentation**
+- Document the correct port assignments
+- Add troubleshooting guide for proxy issues
+- Update README if needed
+- Success Criteria: Clear documentation for future reference
+
+### Project Status Board
+
+#### To Do
+
+#### In Progress
+
+#### Done
+- [x] Audit all port references across the entire application
+- [x] Fix server-panda/index.ts port configuration (3000 → 3001)
+- [x] Fix README.md port references (3000 → 3001)
+- [x] Fix .cursorrules Express server port documentation
+- [x] Fix security middleware CORS origins (localhost:3000 → localhost:5173)
+- [x] Fix client-panda Stats component display URL (0.0.0.0:3001 → localhost:3001)
+- [x] Run security audit on all projects (only low/moderate dev dependency issues found)
+- [x] Test all three servers running together successfully
+- [x] Verify all ports are configured correctly (Astro:4321, Vite:5173, Express:3001)
+
+### Current Status / Progress Tracking
+
+**Status**: ✅ COMPLETED SUCCESSFULLY - All port configurations audited, fixed, and tested.
+
+**Completed Port Audit & Fixes:**
+1. ✅ **Root Cause Identified**: The Astro (port 4321) and React (port 5173) dev servers were not running when Express server started
+2. ✅ **Port Configuration Audit**: Systematically reviewed and fixed ALL port references across the entire codebase
+3. ✅ **Consistent Port Usage**: All files now use port 3001 for Express server consistently
+4. ✅ **Files Updated**: server-panda/index.ts, README.md, .cursorrules, security middleware, Stats component
+5. ✅ **CORS Configuration**: Fixed security middleware to use correct dev server origins
+6. ✅ **Astro Server**: Successfully started on port 4321 (127.0.0.1:4321)
+7. ✅ **Vite Server**: Successfully started on port 5173 (*:5173)
+8. ✅ **Security Audit**: Completed bun audit on all projects - only minor dev dependency vulnerabilities
+
+**Final Status**: All three development servers successfully running on correct ports:
+- ✅ Astro server: 127.0.0.1:4321 (landing pages)
+- ✅ Vite server: *:5173 (React app development)  
+- ✅ Express server: 0.0.0.0:3001 (main server with proxy)
+
+**Testing Results**: Express server started successfully with proper proxy configuration. All services accessible through http://localhost:3001
+
+**Files Modified in Port Audit:**
+- `server-panda/index.ts` - Port default changed from 3000 → 3001
+- `README.md` - Environment examples updated to use 3001
+- `.cursorrules` - Development server documentation updated
+- `server-panda/src/middleware/security.ts` - CORS origins fixed
+- `client-panda/src/components/Stats/Stats.tsx` - Display URL corrected
+
+### Success Criteria Summary
+
+1. ✅ Development servers start without proxy errors
+2. ✅ Landing page accessible at localhost:3001
+3. ✅ React app accessible at localhost:3001/app
+4. ✅ API endpoints accessible at localhost:3001/api
+5. ✅ All three applications work seamlessly in development
+6. ✅ Documentation updated with correct configuration
+7. ✅ All port references consistently use 3001 across entire application
+8. ✅ Security audit completed with acceptable results
+
+## AUTOMATED DEV COMMAND WITH CONSOLIDATED LOGGING 🚀
+
+### Background and Motivation
+
+The user has requested to automate the three-server development setup into a single command that consolidates all logs into one output stream. Currently, developers need to run three separate commands and monitor multiple terminal windows/log files. This creates friction in the development workflow and makes debugging more difficult when issues span multiple services.
+
+### Key Challenges and Analysis
+
+#### Technical Challenges
+
+1. **Process Management**: Need to start three separate processes and manage their lifecycle
+2. **Log Consolidation**: Merge output from Astro, Vite, and Express servers into one stream
+3. **Graceful Shutdown**: Ensure all processes terminate cleanly when the main command is stopped
+4. **Process Identification**: Distinguish between logs from different services in the consolidated output
+5. **Error Handling**: Properly handle failures in any of the individual services
+
+#### Complexity Analysis
+
+**Benefits:**
+- Simplified development workflow - one command to rule them all
+- Consolidated logging makes debugging easier across services
+- Consistent process management and cleanup
+- Better developer experience for new team members
+
+**Reasoning:**
+- This is the simplest solution for the multi-server coordination problem
+- Uses standard shell scripting techniques (process substitution, named pipes)
+- Leverages existing package.json scripts rather than reinventing
+
+**Demerits:**
+- Adds one new script file to maintain
+- Slight complexity in log parsing due to interleaved outputs
+- Platform dependency (bash-specific features)
+
+**Maintainability Impact:**
+- Centralizes development workflow in one place
+- Makes it easier to modify the entire dev setup
+- Clear separation between individual server configs and orchestration
+
+### High-level Task Breakdown
+
+#### Phase 1: Create Consolidated Dev Script (30 mins)
+
+**Task 1.1: Create dev-all.sh Script**
+- Create shell script that kills existing processes
+- Start Astro and Vite servers with prefixed logging
+- Start Express server in foreground with consolidated output
+- Handle graceful shutdown with trap signals
+- Success Criteria: Single script runs all three servers with merged logs
+
+**Task 1.2: Add Bun Script Command**
+- Add "dev:all" script to server-panda package.json
+- Make it executable and cross-platform compatible
+- Success Criteria: `bun run dev:all` starts complete development environment
+
+#### Phase 2: Log Enhancement and Testing (15 mins)
+
+**Task 2.1: Enhance Log Formatting**
+- Add service prefixes to distinguish log sources (e.g., [ASTRO], [VITE], [EXPRESS])
+- Use colors for better visual separation
+- Success Criteria: Easy to identify which service generated each log line
+
+**Task 2.2: Test Complete Workflow**
+- Test startup, shutdown, and error scenarios
+- Verify all services accessible through localhost:3001
+- Test Ctrl+C cleanup behavior
+- Success Criteria: Reliable development environment startup/shutdown
+
+#### Phase 3: Documentation Update (15 mins)
+
+**Task 3.1: Update Development Instructions**
+- Update .cursorrules with new dev:all command
+- Update README.md with simplified workflow
+- Add troubleshooting section for the automated script
+- Success Criteria: Clear documentation for the new workflow
+
+### Project Status Board
+
+#### To Do
+
+#### In Progress
+
+#### Done
+- [x] Create dev-all.sh script with process management and log consolidation
+- [x] Add "dev:all" script to server-panda package.json
+- [x] Implement log prefixing and color coding for service identification
+- [x] Add graceful shutdown handling with signal traps
+- [x] Basic functionality testing completed successfully
+- [x] Test complete workflow including error scenarios
+- [x] Update .cursorrules with simplified dev command
+- [x] Update README.md development section
+- [x] Create portable script with fallback commands for different systems
+
+### Current Status / Progress Tracking
+
+**Status**: ✅ COMPLETED SUCCESSFULLY - Automated development command implemented and tested.
+
+**Implementation Results**:
+- ✅ Single command `bun run dev:all` starts all three servers
+- ✅ Consolidated logging with colored prefixes: `[ASTRO]`, `[VITE]`, `[EXPRESS]`
+- ✅ Automatic process cleanup prevents port conflicts
+- ✅ Graceful shutdown with Ctrl+C stops all servers
+- ✅ Portable script with fallback commands for different systems
+- ✅ Documentation updated in .cursorrules and README.md
+
+**Testing Results**: All servers start successfully and logs are properly consolidated with visual separation.
+
+### Success Criteria Summary
+
+1. ✅ Single command (`bun run dev:all`) starts all three development servers
+2. ✅ All server logs consolidated into one output stream with service prefixes
+3. ✅ Graceful shutdown kills all processes when main command is terminated
+4. ✅ All services accessible through localhost:3001 as before
+5. ✅ Clear visual distinction between logs from different services
+6. ✅ Documentation updated with simplified workflow
+7. ✅ Backward compatibility - individual server commands still work
+8. ✅ Portable script works across different Unix-like systems
+9. ✅ Automatic cleanup prevents port conflicts and leftover processes
+
+## AUTOMATED DEV COMMAND COMPLETED SUCCESSFULLY ✅
+
+The automated development command has been successfully implemented and tested. Developers can now use a single command to start the entire development environment with consolidated logging.
+
+### Final Implementation Summary
+
+**New Command**: `cd saas-panda/server-panda && bun run dev:all`
+
+**Features Delivered**:
+- Automatic process cleanup and port conflict prevention
+- Consolidated logging with colored service prefixes
+- Graceful shutdown handling
+- Cross-platform compatibility with fallback commands
+- Comprehensive error handling and status reporting
+- Updated documentation and simplified workflow
+
+**Files Created/Modified**:
+- `server-panda/dev-all.sh` - Main automation script
+- `server-panda/package.json` - Added dev:all command
+- `.cursorrules` - Updated with simplified workflow
+- `README.md` - Added development section with new command

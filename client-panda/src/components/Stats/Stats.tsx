@@ -13,7 +13,7 @@ const Stats = () => {
             You are at: <strong>/app/stats</strong>
           </p>
           <p className={styles.meta}>
-            URL should show: <strong>http://0.0.0.0:3001/app/stats</strong>
+            URL should show: <strong>http://localhost:3001/app/stats</strong>
           </p>
         </div>
       </div>

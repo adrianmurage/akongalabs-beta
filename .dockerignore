@@ -13,6 +13,8 @@
 **/.yarn/unplugged
 **/.yarn/build-state.yml
 **/.yarn/install-state.gz
+**/bun.lockb
+**/.bun/
 
 # ===============================================
 # Build Outputs & Distribution (Exclude from Docker)
@@ -39,6 +41,8 @@
 **/pnpm-debug.log*
 **/lerna-debug.log*
 **/.pnpm-debug.log*
+**/bun-debug.log*
+**/bun-error.log*
 
 # ===============================================
 # Environment Variables & Configuration

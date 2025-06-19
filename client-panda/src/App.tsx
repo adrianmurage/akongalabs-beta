@@ -2,8 +2,9 @@ import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 import { useState } from "react";
 import { Dialog } from "@base-ui-components/react";
+
 import styles from "./App.module.css";
-import ThemeChanger from "./components/theme-changer/ThemeChanger";
+import { ThemeSelect } from "./components/ThemeSelect";
 import { Button } from "./components/Button/Button";
 import api from "./lib/api";
 
@@ -45,7 +46,7 @@ function App() {
         </Button>
       </div>
 
-      <ThemeChanger />
+      <ThemeSelect />
 
       <Dialog.Root open={dialogOpen} onOpenChange={setDialogOpen}>
         <Dialog.Portal>

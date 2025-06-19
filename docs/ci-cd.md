@@ -32,7 +32,7 @@ A unified CI/CD pipeline that builds all projects and deploys them together as a
 
 **Steps**:
 - Installs dependencies for all projects
-- Runs `yarn build:ui` to build and integrate frontend apps into server
+- Runs `bun run build:ui` to build and integrate frontend apps into server
 - Deploys single unified application to Fly.io
 - Uses cache-busting with commit SHA
 
@@ -90,13 +90,13 @@ You can test individual components locally:
 
 ```bash
 # Test builds locally
-cd server-panda && yarn build
-cd ../client-panda && yarn build
-cd ../landing-panda && yarn build
+cd server-panda && bun run build
+cd ../client-panda && bun run build
+cd ../landing-panda && bun run build
 
 # Test linting
-cd server-panda && yarn lint
-cd ../client-panda && yarn lint
+cd server-panda && bun run lint
+cd ../client-panda && bun run lint
 ```
 
 ### Branch Testing
@@ -106,7 +106,7 @@ The workflow runs on all pull requests, allowing you to test changes before merg
 
 1. **Unified Architecture**: The deployment reflects the actual application architecture where Express serves all applications.
 
-2. **Build Integration**: The workflow uses the existing `yarn build:ui` script that properly integrates frontend builds into the server.
+2. **Build Integration**: The workflow uses the existing `bun run build:ui` script that properly integrates frontend builds into the server.
 
 3. **Single Deployment**: Only one deployment to Fly.io - no separate hosting providers needed.
 

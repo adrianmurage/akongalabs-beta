@@ -39,7 +39,7 @@ Dependencies: Database selection and integration
 Files to modify: 
   - server-panda/src/db/* (new)
   - server-panda/src/middleware/security.ts (database middleware)
-  - SECURITY-CHECKLIST.md (database section updates)
+  - docs/security-checklist.md (database section updates)
 ```
 
 #### **Complexity Analysis**
@@ -73,8 +73,8 @@ Files to modify:
 
 #### **Security Packages to Add**
 ```bash
-yarn add bcrypt jsonwebtoken passport passport-local express-session
-yarn add -D @types/bcrypt @types/jsonwebtoken @types/passport
+bun add bcrypt jsonwebtoken passport passport-local express-session
+bun add -D @types/bcrypt @types/jsonwebtoken @types/passport
 ```
 
 ---
