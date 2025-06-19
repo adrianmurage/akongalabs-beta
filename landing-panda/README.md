@@ -1,47 +1,60 @@
-# Astro Starter Kit: Minimal
+# Landing Panda 🐼
 
-```sh
-bun create astro@latest -- --template minimal
+The static site that converts visitors into customers.
+
+## What is this?
+
+Your landing pages built with Astro. Fast, SEO-friendly, and without unnecessary JavaScript bloat. Because your landing page shouldn't take 3 seconds to load just to show some text and a signup button.
+
+## Why Astro?
+
+- **Actually fast** - Ships zero JavaScript by default
+- **SEO friendly** - Static generation means search engines can actually read your content
+- **Simple** - Write components like React but get static HTML
+- **No hydration drama** - Your page works even if JavaScript fails
+
+## Get it running
+
+```bash
+cd landing-panda
+bun install
+bun run dev
 ```
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/minimal)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/minimal)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/minimal/devcontainer.json)
+Your landing pages are now at `localhost:4321`.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## What's inside
 
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+```
+src/
+├── pages/          # Your actual pages (index.astro, about.astro, etc.)
+├── components/     # Reusable Astro components
+└── layouts/        # Page layouts and structure
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+Each `.astro` file in `pages/` becomes a route. `index.astro` becomes your homepage, `about.astro` becomes `/about`, etc.
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+## The philosophy
 
-Any static assets, like images, can be placed in the `public/` directory.
+- **Content first** - Your landing page exists to communicate value, not show off your JavaScript skills
+- **Performance matters** - Every millisecond counts for conversion
+- **Keep it static** - Dynamic stuff belongs in the React app, not the landing page
+- **Mobile first** - Most of your traffic is on mobile anyway
 
-## 🧞 Commands
+## Common tasks
 
-All commands are run from the root of the project, from a terminal:
+**Add a new page:**
+1. Create `src/pages/pricing.astro`
+2. That's it. Now you have `/pricing`
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `bun install`          | Installs dependencies                            |
-| `bun run dev`          | Starts local dev server at `localhost:4321`      |
-| `bun run build`        | Build your production site to `./dist/`          |
-| `bun run preview`      | Preview your build locally, before deploying     |
-| `bun run astro ...`    | Run CLI commands like `astro add`, `astro check` |
-| `bun run astro -- --help` | Get help using the Astro CLI                     |
+**Add a component:**
+1. Create `src/components/Hero.astro`
+2. Import it: `import Hero from '../components/Hero.astro'`
+3. Use it: `<Hero />`
 
-## 👀 Want to learn more?
+**Style things:**
+- Put CSS in the `<style>` tag at the bottom of your `.astro` files
+- Styles are automatically scoped to that component
+- No CSS-in-JS nonsense needed
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Built for people who want fast websites that actually convert visitors.

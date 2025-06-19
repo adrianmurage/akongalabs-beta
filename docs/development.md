@@ -1,158 +1,171 @@
-# Development Guide
+# Development Setup
 
-## Local Development URLs
+Getting your dev environment working without the headaches.
 
-### 🚀 Quick Start
-
-When running the development servers, always use **localhost** instead of **0.0.0.0** to avoid SSL/HTTPS issues:
+## The one command you need
 
 ```bash
-# Start all development servers
-cd server-panda && bun run dev
-
-# Access the application
-http://localhost:3001       # Main entry point
-http://localhost:3001/app   # React application
-http://localhost:3001/api   # API endpoints
+cd saas-panda/server-panda
+./dev-simple.sh
 ```
 
-### 🔧 Development Servers
+That's it. Everything runs on `localhost:3001`.
 
-| Service | Port | URL | Purpose |
-|---------|------|-----|---------|
-| Express Server | 3001 | http://localhost:3001 | Main server & API |
-| React App (Vite) | 5173 | http://localhost:5173 | Client development |
-| Astro Landing | 4321 | http://localhost:4321 | Landing pages |
+## What just happened?
 
-### ⚠️ Common Issues
+The script starts three servers:
+- **Express server** (port 3001) - Your API and main entry point
+- **React app** (port 5173) - Vite dev server for the frontend
+- **Landing pages** (port 4321) - Astro dev server for marketing pages
 
-#### SSL/HTTPS Errors
+In development, Express proxies everything:
+- `localhost:3001` → Landing pages (Astro)
+- `localhost:3001/app` → React app (Vite)  
+- `localhost:3001/api` → API routes (Express)
 
-**Problem**: Browser shows `ERR_SSL_PROTOCOL_ERROR` when accessing `https://0.0.0.0:3001`
+## Setting up your environment
 
-**Solution**: 
-1. Always use `http://localhost:3001` (not `https://` and not `0.0.0.0`)
-2. Clear browser cache if you get redirected to HTTPS:
-   - Chrome: `chrome://net-internals/#hsts` → Delete domain
-   - Firefox: History → Clear Recent History → Cache
-   - Safari: Develop → Empty Caches
-
-#### Port Already in Use
-
-**Problem**: `Error: listen EADDRINUSE: address already in use :::3001`
-
-**Solution**:
+Copy the environment template:
 ```bash
-# Find and kill the process using the port
-# Linux/Mac:
+cd server-panda
+cp .env.template .env
+```
+
+Edit `.env` with your database info:
+```env
+DATABASE_URL=postgres://user:pass@localhost:5432/yourdb
+PORT=3001
+NODE_ENV=development
+```
+
+## When things break
+
+**"Port already in use"**
+```bash
+# Kill whatever's using port 3001
 lsof -i :3001
 kill -9 <PID>
 
-# Windows:
-netstat -ano | findstr :3001
-taskkill /PID <PID> /F
+# Or use the script (it handles this automatically)
+./dev-simple.sh
 ```
 
-### 🛠️ Development Workflow
+**"Can't connect to database"**
+- Check your `.env` file
+- Make sure PostgreSQL is running
+- If using Fly.io database, start the proxy: `flyctl proxy 5432 -a your-db-app`
 
-1. **Start the main server** (includes proxy to other services):
-   ```bash
-   cd server-panda
-   bun run dev
-   ```
+**"SSL/HTTPS errors"**
+- Always use `http://localhost:3001` (not https, not 0.0.0.0)
+- Clear your browser cache if it's forcing HTTPS
 
-2. **In development, the Express server proxies**:
-   - `/` → Astro (landing pages)
-   - `/app` → React (client application)
-   - `/api` → Express API routes
+**"React app not loading"**
+- Check that all three servers started (look for colored log prefixes)
+- Visit `localhost:5173` directly to see if Vite is running
+- Check the terminal for any build errors
 
-3. **Access everything through the main server**:
-   - http://localhost:3001 - Landing page
-   - http://localhost:3001/app - React app
-   - http://localhost:3001/api/health - API health check
+## Manual server control
 
-### 📝 Environment Variables
+If you need to run servers individually:
 
-Create a `.env` file in `server-panda`:
+```bash
+# Kill all dev processes first
+pkill -f "bun run dev"
+
+# Then start what you need
+cd client-panda && bun run dev      # React app on 5173
+cd landing-panda && bun run dev     # Astro on 4321  
+cd server-panda && bun run dev      # Express on 3001
+```
+
+## Debugging tips
+
+**Check what's running:**
+```bash
+# See which ports are listening
+ss -tln | grep -E "(3001|5173|4321)"
+
+# See running processes
+ps aux | grep -E "(bun|astro|vite)" | grep -v grep
+```
+
+**Follow the logs:**
+The dev script shows all logs with colored prefixes:
+- `[EXPRESS]` - API server logs
+- `[VITE]` - React app logs  
+- `[ASTRO]` - Landing page logs
+
+**Test the proxy:**
+- `curl localhost:3001` → Should return Astro landing page
+- `curl localhost:3001/app` → Should return React app HTML
+- `curl localhost:3001/api/health` → Should return JSON health status
+
+## Database development
+
+**Using local PostgreSQL:**
+```bash
+# Install PostgreSQL
+brew install postgresql  # Mac
+sudo apt install postgresql  # Ubuntu
+
+# Create database
+createdb yourappname
+
+# Update .env
+DATABASE_URL=postgres://postgres@localhost:5432/yourappname
+```
+
+**Using Fly.io database:**
+```bash
+# Start proxy (keep this running)
+flyctl proxy 5432 -a your-database-app-name
+
+# Update .env  
+DATABASE_URL=postgres://user:pass@localhost:5432/dbname
+```
+
+## Rate limiting in development
+
+The API has rate limiting enabled. If you're hitting limits while developing:
 
 ```env
-# Server Configuration
-PORT=3001
-NODE_ENV=development
-
-# Database
-DATABASE_URL=your_database_url_here
-
-# Rate Limiting Configuration (optional)
-RATE_LIMIT_WINDOW=15              # Window in minutes (default: 15)
-RATE_LIMIT_MAX=1000               # Max requests per window (default: 1000 in dev, 100 in prod)
-RATE_LIMIT_API_MAX=500            # Max API requests per window (default: 500 in dev, 50 in prod)
-DISABLE_RATE_LIMIT_DEV=true       # Disable rate limiting in development (default: false)
-
-# Add other environment variables as needed
+# Add to .env
+DISABLE_RATE_LIMIT_DEV=true
 ```
 
-### 🔍 Debugging
-
-1. **Check all servers are running**:
-   ```bash
-   # Check Express server logs
-   cd server-panda && bun run dev
-   
-   # In separate terminals if needed:
-   cd client-panda && bun run dev
-   cd landing-panda && bun run dev
-   ```
-
-2. **Verify proxy is working**:
-   - Visit http://localhost:3001 (should show Astro landing page)
-   - Visit http://localhost:3001/app (should show React app)
-   - Visit http://localhost:3001/api/health (should return JSON)
-
-3. **Browser DevTools**:
-   - Open Network tab to see actual URLs being requested
-   - Check Console for any client-side errors
-   - Verify no HTTPS redirects are happening
-
-### 🚨 Important Notes
-
-- **Never use `0.0.0.0` in browser URLs** - it can cause SSL/security issues
-- **Always use `http://` protocol** in development (not `https://`)
-- **Use `localhost` or `127.0.0.1`** for local development
-- The Express server acts as a reverse proxy in development, so you only need to access port 3001
-
-### 📊 Rate Limiting
-
-The application includes rate limiting for security. Default limits:
-
-**Development Mode:**
-- Global: 1000 requests per 15 minutes
-- API: 500 requests per 15 minutes
-
-**Production Mode:**
-- Global: 100 requests per 15 minutes
-- API: 50 requests per 15 minutes
-
-**Customization:**
-You can customize rate limits via environment variables (see `.env` example above).
-
-**If you hit rate limits during development:**
-1. Set `DISABLE_RATE_LIMIT_DEV=true` in your `.env` file
-2. Or increase the limits: `RATE_LIMIT_MAX=5000`
-3. Or reduce the window: `RATE_LIMIT_WINDOW=5`
-
-**Rate limit headers in responses:**
-```
-RateLimit-Limit: 1000
-RateLimit-Remaining: 999
-RateLimit-Reset: 2024-01-01T12:00:00.000Z
+Or increase the limits:
+```env
+RATE_LIMIT_MAX=5000
+RATE_LIMIT_API_MAX=2000
 ```
 
-### 🏗️ Production vs Development
+## Common gotchas
 
-| Aspect | Development | Production |
-|--------|------------|------------|
-| URL | http://localhost:3001 | https://your-domain.com |
-| Servers | Multiple (proxied) | Single unified build |
-| Static Files | Served by dev servers | Served from build folders |
-| API Routes | Proxied through Express | Direct Express routes |
+- **Always use localhost, never 0.0.0.0** in browser URLs
+- **Use http://, not https://** in development
+- **Don't access individual dev servers directly** - go through port 3001
+- **Keep the Fly database proxy running** if you're using hosted PostgreSQL
+- **Ctrl+C stops all servers** when using the dev script
+
+## File structure
+
+```
+saas-panda/
+├── client-panda/       # React app (Vite dev server)
+├── landing-panda/      # Astro landing pages
+├── server-panda/       # Express API server
+│   ├── dev-simple.sh   # The magic script
+│   └── .env           # Your environment config
+└── docs/              # You are here
+```
+
+## Production vs development
+
+| Thing | Development | Production |
+|-------|------------|------------|
+| How to access | `localhost:3001` | `your-domain.com` |
+| Server setup | 3 separate servers + proxy | 1 server serving everything |
+| Static files | Served by Vite/Astro | Built and served by Express |
+| Hot reload | ✅ Yes | ❌ No |
+
+The beauty is that development feels like separate apps, but production deploys as one unified application.

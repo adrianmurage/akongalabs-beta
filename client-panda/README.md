@@ -1,98 +1,59 @@
-# A Working Panda 🐼
+# Client Panda 🐼
 
-A modern React application built with Vite, featuring Radix UI components and dynamic theme switching capabilities.
+The React app where your users actually get stuff done.
 
-## Features
+## What is this?
 
-- ⚡ **Fast Development** - Powered by Vite with Hot Module Replacement
-- 🎨 **Modern UI** - Built with Radix UI Themes for accessible, customizable components
-- 🌙 **Theme Support** - Light/dark mode switching with next-themes
-- 📱 **Responsive Design** - Mobile-first approach with flexible layouts
-- 🔧 **TypeScript** - Full type safety throughout the application
-- 🧹 **Code Quality** - ESLint configuration with React-specific rules
+A React app that doesn't suck. Built with Vite because waiting for Webpack to compile is a waste of life, and Base UI because building accessible components from scratch is a full-time job.
 
-## Tech Stack
+## The stack (and why)
 
-- **Frontend Framework**: React 19
-- **Build Tool**: Vite 6
-- **UI Library**: Radix UI Themes
-- **Theme Management**: next-themes
-- **Language**: TypeScript
-- **Styling**: CSS Modules + Radix UI
-- **Linting**: ESLint with TypeScript support
+- **React 19** - The new hotness, but stable
+- **Vite** - Fast builds, fast reloads, fast everything
+- **Base UI** - Accessible components that actually work
+- **TypeScript** - Because debugging runtime errors is for masochists
+- **CSS Modules** - Scoped styles without the styled-components bloat
 
-## Getting Started
+## Get it running
 
-### Prerequisites
-
-- Node.js (version 18 or higher recommended)
-- Bun package manager
-
-### Installation
-
-1. Clone the repository:
 ```bash
-git clone <repository-url>
 cd client-panda
-```
-
-2. Install dependencies:
-```bash
 bun install
-```
-
-3. Start the development server:
-```bash
 bun run dev
 ```
 
-4. Open your browser and navigate to `http://localhost:5173`
+Boom. React app running on `localhost:5173`.
 
-## Available Scripts
-
-- `bun run dev` - Start the development server
-- `bun run build` - Build the application for production
-- `bun run preview` - Preview the production build locally
-- `bun run lint` - Run ESLint to check code quality
-
-## Project Structure
+## What's in the box
 
 ```
 src/
-├── components/          # Reusable UI components
-│   ├── Button/         # Custom button component
-│   └── theme-changer/  # Theme toggle component
-├── assets/             # Static assets
-├── App.tsx             # Main application component
-├── main.tsx           # Application entry point
-├── index.css          # Global styles
-└── vite-env.d.ts      # Vite type definitions
+├── components/     # Reusable stuff
+├── App.tsx        # Main app component
+├── main.tsx       # Entry point
+└── index.css      # Global styles
 ```
 
-## Components
+That's it. No `/utils`, no `/hooks`, no `/contexts` until you actually need them.
 
-### ThemeChanger
-A toggle component that allows users to switch between light and dark themes. Uses next-themes for persistence and smooth transitions.
+## The components
 
-### Button
-A custom button component that extends Radix UI's design system with additional styling and functionality.
+**ThemeChanger** - Light/dark mode toggle that actually remembers your choice.
 
-## Theme Configuration
+**Button** - A button that looks good and works everywhere. Revolutionary, I know.
 
-The application uses Radix UI Themes with the following configuration:
-- **Accent Color**: Tomato
-- **Panel Background**: Solid
-- **Border Radius**: Small
+## Theme setup
 
-Themes are managed by next-themes and persist across browser sessions.
+Uses Base UI components with sensible defaults:
+- Clean, minimal styling
+- CSS modules for scoped styles
+- Dark/light theme support
 
-## Development Guidelines
+## Philosophy
 
-This project follows a **bias toward simplicity** approach:
+- Write boring code that works
+- Don't abstract until you have to
+- Keep it simple, stupid
+- If you need a comment to explain it, rewrite it
 
-- Prefer explicit over clever code
-- Choose the simpler solution when possible
-- Avoid unnecessary dependencies and abstractions
-- Keep configurations minimal and focused
-- Write code that others can easily understand and maintain
-
+Built for people who want to ship features, not win architecture debates.

@@ -1,216 +1,116 @@
 # Server Panda 🐼
 
-A production-ready Express.js server built with TypeScript, PostgreSQL, and Docker. Deployed on Fly.io with intelligent caching and comprehensive health monitoring.
+The backend that actually does the work.
 
-## Quick Start
+## What is this?
 
-### Prerequisites
+An Express.js server that handles your API, serves your frontend apps, and doesn't fall over when people use it. Built with TypeScript because life's too short for runtime type errors, and PostgreSQL because your data deserves better than MongoDB.
 
-- Node.js 22.16.0 or higher
-- PostgreSQL database
-- Docker (for containerized deployment)
-- Fly CLI (for deployment)
-
-### Installation
+## Get it running
 
 ```bash
-# Clone and setup
-git clone git@github.com:Adrian-corp/server-panda.git
-
-# change dire
 cd server-panda
-
-# install dependencies
 bun install
-
-# Set up environment
 cp .env.template .env
-# Edit .env with your database URLs
-
-# Start development server
+# Edit .env with your database info
 bun run dev
 ```
 
-## Project Overview
+Your API is now running on `localhost:3001`.
 
-Server Panda is a modern Node.js backend application featuring:
+## The stack (and why)
 
-- **Express.js** server with TypeScript
-- **PostgreSQL** database with Drizzle ORM
-- **Docker** containerization
-- **Fly.io** deployment with intelligent caching
-- **Health monitoring** endpoints
-- **CORS** support for cross-origin requests
+- **Express.js 5** - Still the best Node.js web framework
+- **TypeScript** - JavaScript but with fewer surprises
+- **PostgreSQL** - A real database for real applications
+- **Drizzle ORM** - Type-safe database queries without the magic
+- **Fly.io** - Deployment that actually works
 
-## Development Setup
+## What it does
 
-### Database Configuration
+This server handles three jobs:
 
-The application uses Drizzle ORM with PostgreSQL. Database configuration automatically switches between development and production based on `NODE_ENV`.
+1. **API endpoints** - Your actual business logic lives here
+2. **Static file serving** - Serves your React app and landing pages in production
+3. **Development proxy** - Routes requests to Vite/Astro during development
 
-- **Development:** Uses `DEV_DATABASE_URL`
-- **Production:** Uses `DATABASE_URL`
+## Environment setup
 
-### Using Fly.io Hosted Database (Recommended for Development)
+Copy `.env.template` to `.env` and fill in your database details:
 
-If you're using the hosted database on Fly.io for development, you'll need to proxy the connection:
-
-```bash
-# Start the database proxy (run this in a separate terminal)
-flyctl proxy 5432 -a database-panda-dev
-
-# In your .env file, use:
-# DEV_DATABASE_URL=postgres://postgres:your_password@0.0.0.0:5432/postgres
+```env
+DEV_DATABASE_URL=postgres://user:pass@localhost:5432/dbname
+DATABASE_URL=postgres://user:pass@prod-host:5432/dbname
+PORT=3001
 ```
 
-> **Important:** Keep the proxy running in a separate terminal window while developing. The proxy forwards your local port 5432 to the remote Fly.io database.
+## The important endpoints
 
-### Development Commands
+- `GET /` - Basic health check
+- `GET /health` - App health status
+- `GET /db-health` - Database connection status
+- `GET /api/*` - Your actual API routes
 
+## Database stuff
+
+Using Drizzle ORM because it's TypeScript-first and doesn't try to be too clever. Schema lives in `src/db/schema.ts`, migrations in `drizzle/`.
+
+**Development with Fly.io database:**
 ```bash
-# Start development server with hot reload
-bun run dev
+# Start the proxy (keep this running)
+flyctl proxy 5432 -a your-database-app
 
-# Build TypeScript
-bun run tsc
-
-# Lint code
-bun run lint
-
-# Type check
-bun run tsc --noEmit
+# Then your app can connect to localhost:5432
 ```
-
-## API Endpoints
-
-### Health Checks
-
-- **GET /** - Basic server response
-
-  ```
-  Response: "Hello from server"
-  ```
-
-- **GET /health** - Application health status
-
-  ```json
-  {
-    "status": "OK",
-    "timestamp": "2025-06-07T17:27:31.244Z"
-  }
-  ```
-
-- **GET /db-health** - Database connectivity status
-  ```json
-  {
-    "status": "OK",
-    "timestamp": "2025-06-07T17:27:31.244Z"
-  }
-  ```
 
 ## Deployment
 
-### Fly.io Deployment
-
-The project includes a smart deployment script with cache management options:
+We use Fly.io because it's simple and works:
 
 ```bash
-# Normal deployment (recommended)
+# The easy way
 ./deploy.sh
 
-# Cache-busted deployment (for major changes)
-./deploy.sh --cache-bust
-
-# Complete rebuild (when dependencies change)
+# If things are broken and you need a fresh build
 ./deploy.sh --no-cache
 
-# Show help
-./deploy.sh --help
+# If you changed a lot and want to bypass caches
+./deploy.sh --cache-bust
 ```
 
-### Manual Fly.io Setup
+That's it. Your app is live.
 
-```bash
-# Install Fly CLI
-curl -L https://fly.io/install.sh | sh
-
-# Login to Fly.io
-fly auth login
-
-# Deploy
-fly deploy
-```
-
-## Project Structure
+## Project structure
 
 ```
-server-panda/
-├── src/
-│   └── db.ts              # Database configuration and utilities
-├── drizzle/               # Database migrations
-├── build/                 # Compiled TypeScript output
-├── index.ts               # Main application entry point
-├── package.json           # Dependencies and scripts
-├── tsconfig.json          # TypeScript configuration
-├── drizzle.config.ts      # Database ORM configuration
-├── Dockerfile             # Container configuration
-├── fly.toml               # Fly.io deployment config
-├── deploy.sh              # Smart deployment script
-└── README.md              # This file
+src/
+├── db/             # Database config and schema
+├── routes/         # API route handlers
+├── middleware/     # Express middleware
+└── utils/          # Utility functions
+
+index.ts            # Main app entry point
+drizzle/           # Database migrations
 ```
 
+Keep it simple. No `/helpers`, `/services`, `/controllers` until you actually need them.
 
-## Configuration Files
+## Common problems
 
-### TypeScript (`tsconfig.json`)
+**Database won't connect:** Check your `.env` file and make sure PostgreSQL is running (or your Fly proxy).
 
-- ES2022 target with Node22 lib
-- ESNext modules with node resolution
-- Strict type checking enabled
+**TypeScript errors:** Run `bun run tsc` to see what's broken.
 
-### ESLint (`eslint.config.mjs`)
+**Deploy failing:** Try `./deploy.sh --no-cache` to force a fresh build.
 
-- TypeScript ESLint integration
-- Stylistic rules for consistent code formatting
+**502 errors:** Check `fly logs` to see what's actually wrong.
 
-### Environment Variables
+## Philosophy
 
-| Variable           | Description                       | Required    |
-| ------------------ | --------------------------------- | ----------- |
-| `DEV_DATABASE_URL` | Development PostgreSQL connection | Development |
-| `DATABASE_URL`     | Production PostgreSQL connection  | Production  |
-| `PORT`             | Server port (default: 3001)       | No          |
-| `NODE_ENV`         | Environment mode                  | No          |
+- Write boring code that works
+- Keep the API simple and predictable
+- Handle errors gracefully
+- Log useful information for debugging
+- Don't optimize until you have actual performance problems
 
-## Troubleshooting
-
-### Common Issues
-
-1. **Database Connection Failed**
-
-   - Verify database URLs in `.env`
-   - Check database server is running (or Fly.io proxy if using hosted DB)
-   - For Fly.io database: Ensure `flyctl proxy 5432 -a database-panda-dev` is running
-   - Test connection: `bun run dev` and visit `/db-health`
-
-2. **TypeScript Compilation Errors**
-
-   - Run `bun run tsc` to see detailed errors
-   - Check `tsconfig.json` configuration
-   - Ensure all dependencies are installed
-
-3. **Deployment Issues**
-   - Use `./deploy.sh --cache-bust` for cache-related problems
-   - Check Fly.io logs: `fly logs`
-   - Verify environment variables: `fly secrets list`
-
-## Contributing
-
-1. Follow the existing code style (ESLint configured)
-2. Add tests for new features
-3. Update this README for significant changes
-4. Use meaningful commit messages
-
----
-
-Built with ❤️ using Express.js, TypeScript, PostgreSQL, and Fly.io
+Built for people who want to ship products, not win Node.js architecture contests.
