@@ -1,0 +1,42 @@
+{
+  "name": "saas-panda",
+  "version": "1.0.0",
+  "description": "A real SaaS boilerplate that actually ships products",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "cd server-panda && ./dev-simple.sh",
+    "build": "cd server-panda && bun run build:ui",
+    "deploy": "cd server-panda && fly deploy",
+    "deploy:dev": "cd server-panda && bun run deploy:dev",
+    "setup": "./setup.sh",
+    "clean": "rm -rf */node_modules */dist */build",
+    "install:all": "cd client-panda && bun install && cd ../landing-panda && bun install && cd ../server-panda && bun install",
+    "logs": "cd server-panda && fly logs",
+    "logs:dev": "cd server-panda && fly logs --app server-panda-dev",
+    "lint": "cd client-panda && bun run lint && cd ../server-panda && bun run lint",
+    "tsc": "cd server-panda && bun run tsc",
+    "db:migrate": "cd server-panda && bun run drizzle-kit migrate",
+    "db:studio": "cd server-panda && bun run drizzle-kit studio"
+  },
+  "keywords": [
+    "saas",
+    "react",
+    "astro",
+    "express",
+    "typescript",
+    "postgresql",
+    "monorepo"
+  ],
+  "author": "SaaS Panda Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0",
+    "bun": ">=1.0.0"
+  },
+  "workspaces": [
+    "client-panda",
+    "landing-panda",
+    "server-panda"
+  ]
+}

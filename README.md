@@ -21,14 +21,42 @@ Because I'm tired of seeing developers waste months setting up the "perfect" sta
 ## Quick start (the only section that matters)
 
 ```bash
+# First time setup
+./setup.sh
+
 # Get it running
-cd saas-panda/server-panda
-./dev-simple.sh
+bun run dev
 
 # That's it. Everything runs on localhost:3001
 ```
 
-The script starts all three servers and handles the boring stuff. Your app is at `localhost:3001/app`, landing pages at `localhost:3001`, and API at `localhost:3001/api`.
+The setup script handles dependencies and configuration. The dev command starts all three servers and handles the boring stuff. Your app is at `localhost:3001/app`, landing pages at `localhost:3001`, and API at `localhost:3001/api`.
+
+## How it works
+
+```
+User Request → Express (3001) → Routes to:
+├── / → Landing pages (Astro)
+├── /app → React app (Vite) 
+└── /api → API endpoints (Express)
+```
+
+In development: 3 separate servers + proxy  
+In production: 1 unified server serving everything
+
+## Quick Reference
+
+**Common tasks:**
+- Start dev environment: `bun run dev`
+- Build for production: `bun run build`
+- Deploy: `bun run deploy`
+- Check logs: `bun run logs`
+- Database proxy: `flyctl proxy 5432 -a your-db-app`
+
+**Troubleshooting:**
+- Port conflicts: Script handles cleanup automatically
+- Database issues: Check `.env` and proxy connection
+- Build failures: Try `--no-cache` flag on deploy
 
 ## What's inside?
 
@@ -57,14 +85,14 @@ The script starts all three servers and handles the boring stuff. Your app is at
 
 ## Getting serious
 
-When you're ready to deploy and make money:
+**When you're ready to deploy and make money:**
 
 ```bash
 # Build everything
-bun run build:ui
+bun run build
 
 # Deploy to Fly.io
-fly deploy
+bun run deploy
 ```
 
 Everything deploys together. No orchestration nightmares, no separate hosting bills.
@@ -88,6 +116,8 @@ This is for builders who want to ship products, not impress other developers.
 ## Contributing
 
 Make it better, but keep it simple. The goal is shipping products, not winning architecture contests.
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed guidelines on how to contribute.
 
 ---
 

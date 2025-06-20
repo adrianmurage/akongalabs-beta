@@ -23,6 +23,36 @@ print_error() {
     echo -e "${RED}[DEV-SIMPLE ERROR]${NC} $1"
 }
 
+# Function to check dependencies
+check_dependencies() {
+    print_status "Checking dependencies..."
+
+    if ! command -v bun &> /dev/null; then
+        print_error "Bun is not installed. Install from https://bun.sh"
+        exit 1
+    fi
+
+    # Check if .env exists
+    if [ ! -f .env ]; then
+        if [ -f .env.example ]; then
+            print_error ".env file missing. Run: cp .env.example .env and configure your database"
+        elif [ -f .env.template ]; then
+            print_error ".env file missing. Run: cp .env.template .env and configure your database"
+        else
+            print_error ".env file missing. Create one with your database configuration"
+        fi
+        exit 1
+    fi
+
+    # Check if node_modules exist
+    if [ ! -d node_modules ]; then
+        print_status "Installing dependencies..."
+        bun install
+    fi
+
+    print_status "Dependencies check passed"
+}
+
 # Function to kill existing processes
 cleanup_processes() {
     print_status "Cleaning up existing processes..."
@@ -75,6 +105,9 @@ PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 print_status "Starting SaaS Panda development environment..."
 print_status "Project root: $PROJECT_ROOT"
 
+# Check dependencies first
+check_dependencies
+
 # Clean up any existing processes
 cleanup_processes
 
@@ -93,11 +126,19 @@ print_status ""
 {
     # Start Astro server
     cd "$PROJECT_ROOT/landing-panda"
+    if [ ! -d node_modules ]; then
+        print_status "Installing landing-panda dependencies..."
+        bun install
+    fi
     bun run dev 2>&1 | sed "s/^/$(echo -e "${YELLOW}[ASTRO]${NC}") /" &
     ASTRO_PID=$!
 
     # Start Vite server
     cd "$PROJECT_ROOT/client-panda"
+    if [ ! -d node_modules ]; then
+        print_status "Installing client-panda dependencies..."
+        bun install
+    fi
     bun run dev 2>&1 | sed "s/^/$(echo -e "${BLUE}[VITE]${NC}") /" &
     VITE_PID=$!
 
@@ -106,6 +147,7 @@ print_status ""
 
     # Start Express server in foreground
     cd "$SCRIPT_DIR"
+    print_status "Starting Express server..."
     bun run dev 2>&1 | sed "s/^/$(echo -e "${GREEN}[EXPRESS]${NC}") /"
 
 } 2>&1
