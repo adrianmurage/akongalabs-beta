@@ -1,0 +1,146 @@
+.container {
+  background-color: white;
+  border: 1px solid var(--color-border-primary);
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  margin-top: 2rem;
+}
+
+.title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0 0 1.25rem 0;
+}
+
+.tableWrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.headerRow {
+  border-bottom: 1px solid var(--color-border-primary);
+}
+
+.headerCell {
+  text-align: left;
+  padding: 0.75rem 0.5rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  vertical-align: top;
+}
+
+.headerCellRight {
+  text-align: right;
+  padding: 0.75rem 0.5rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  vertical-align: top;
+}
+
+.multiplier {
+  font-weight: 400;
+  color: var(--color-text-secondary);
+  font-size: 0.75rem;
+}
+
+.bodyRow {
+  border-bottom: 1px solid var(--color-border-secondary);
+}
+
+.bodyRow:last-child {
+  border-bottom: none;
+}
+
+.roleCell {
+  padding: 0.75rem 0.5rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.salaryCell {
+  padding: 0.75rem 0.5rem;
+  text-align: right;
+  color: var(--color-text-secondary);
+  font-family: var(--font-mono, 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace);
+}
+
+.footnote {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border-secondary);
+}
+
+.footnoteText {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  margin: 0 0 0.5rem 0;
+  line-height: 1.4;
+}
+
+.footnoteText:last-child {
+  margin-bottom: 0;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .table {
+    font-size: 0.75rem;
+    min-width: 600px;
+  }
+
+  .headerCell,
+  .headerCellRight {
+    padding: 0.5rem 0.25rem;
+  }
+
+  .roleCell,
+  .salaryCell {
+    padding: 0.5rem 0.25rem;
+  }
+
+  .multiplier {
+    font-size: 0.625rem;
+  }
+
+  .footnoteText {
+    font-size: 0.625rem;
+  }
+}
+
+/* Tablet responsiveness */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .table {
+    font-size: 0.8125rem;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .container {
+    background-color: var(--color-bg-primary);
+    border-color: var(--color-border-secondary);
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .container {
+    border-width: 2px;
+  }
+
+  .headerRow {
+    border-bottom-width: 2px;
+  }
+}

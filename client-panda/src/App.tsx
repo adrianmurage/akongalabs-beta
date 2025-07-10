@@ -38,6 +38,7 @@ function App() {
 
       <div className={styles.buttonGroup}>
         <Button onClick={() => navigate("/stats")}>Go to Stats</Button>
+        <Button onClick={() => navigate("/salary")}>Salary Calculator</Button>
         <Button variant="outline" onClick={() => (window.location.href = "/")}>
           Back to Home
         </Button>
