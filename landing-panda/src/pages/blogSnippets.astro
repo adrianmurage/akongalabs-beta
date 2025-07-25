@@ -1,0 +1,36 @@
+---
+import "../../public/styles/mylanding.css"
+import BlogCard from "../components/BlogCard.tsx";
+import {blogPosts} from '../data/blogsnippets';
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Charity's landing page 🐼</title>
+  </head>
+  <body>
+    <div class="blogs_container">
+        <div class="first_links">
+            <a href="/newLanding">Akong'a Labs</a>
+            <a href="/blogSnippets">Blogs</a>
+        </div>
+      {
+        blogPosts.map(post => (
+          <BlogCard
+            date={post.date}
+            title={post.title}
+            snippet={post.snippet}
+            link={post.link}
+          />
+        ))
+      }
+      <div class="last_links">
+          <p> <a href="https://x.com/adrianmurage">X</a> </p>
+          <p> <a href="https://github.com/AkongaLabs">GitHub</a></p>
+      </div>
+    </div>
+  </body>
+</html>
