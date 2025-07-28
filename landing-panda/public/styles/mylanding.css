@@ -114,7 +114,7 @@ a.readmore:hover{
 
 /* blogs styling */
 .blog-body {
-    border: 1px solid pink;
+    /* border: 1px solid pink; */
     display: flex;
     flex-direction: column;
     margin-left: 359px;
@@ -147,7 +147,7 @@ a.readmore:hover{
   /* margin-left: 3rem; */
 }
 .blog-post{
-    border: 1px solid red;
+    /* border: 1px solid red; */
 }
 .blog-post p {
   margin-bottom: 0.5rem;
