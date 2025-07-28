@@ -114,37 +114,43 @@ a.readmore:hover{
 
 /* blogs styling */
 .blog-body {
+    border: 1px solid pink;
     display: flex;
     flex-direction: column;
-    margin-left: 20%;
+    margin-left: 359px;
     font-size: 120%;
     /* align-items: center; */
     justify-content: center;
     background-color:var(--bg-color);
     font-family: var(--font-family);
-    line-height: 1.8;
-    padding: 2rem;
+    line-height: 1.6;
+    padding: 9px;
     color:var(--text-color);
-    width: 800px;
+    width: 710px;
 }
 .blog-post img {
   max-width: 700px;  /* or whatever width you prefer */
   height: auto;
   display: block;
-  margin: 1rem auto; /* optional: gives rounded corners */
+  /* margin-top: 1px; */
 }
 .blog-post title{
     align-content: center;
     align-self: center;
 }
 
-.blog-post h1, h2, h3 {
+.blog-post h1,h2,h3 {
   margin-top: 1.5rem;
   margin-bottom: 0.75rem;
+  font-size: 40px;
+  font-weight: 200;
+  /* margin-left: 3rem; */
 }
-
+.blog-post{
+    border: 1px solid red;
+}
 .blog-post p {
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 .blog-meta {
@@ -163,4 +169,15 @@ a.readmore:hover{
 .blog-post blockquote {
   border-left: 2px solid #ccc;
   padding-left: 1rem;
+}
+
+/* .blog-body > p > em:nth-of-type(1){
+    font-size: 15px;
+    margin-left: 50%;
+    color:var(--blue-color)
+} */
+
+/* actual blogdiv */
+.actualblog_divh1{
+    /* border: 1px solid pink; */
 }

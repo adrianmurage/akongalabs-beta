@@ -1,3 +1,5 @@
+import '../../public/styles/mylanding.css'
+
 type BlogCardProps = {
   title: string;
   date: string;
