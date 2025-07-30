@@ -39,8 +39,11 @@ Akonga will be a space for people who value lifelong learning to thrive.
 Forever remote. Asynchronous first. We save “in person” for fun and gallivanting, the way God intended.
 
 ## Join the Movement!
-[EMAIL BOX]
+<div>
+  <script async data-uid="4e5ba9cc5c" src="https://akongalabs.kit.com/4e5ba9cc5c/index.js"></script>
+</div>
+
 
 ---
 
-**Next:** [Understanding Remote Onboarding: Lessons from Akong'a Labs](#)
+**Next:** [Understanding Remote Onboarding: Lessons from Akong'a Labs](/blogs/blog2)

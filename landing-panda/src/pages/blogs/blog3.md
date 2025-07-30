@@ -90,7 +90,10 @@ Our founder is working with the founder of Gumroad on a similar bounty program. 
 Don’t walk, run!
 
 ## Join the Movement!
-[EMAIL BOX]
+<div>
+  <script async data-uid="4e5ba9cc5c" src="https://akongalabs.kit.com/4e5ba9cc5c/index.js"></script>
+</div>
 
-**Previous:** [Understanding Remote Onboarding: Lessons from Akong'a Labs](#)
-**Next:** [The Power of Honest Communication in Teams]()
+
+**Previous:** [Understanding Remote Onboarding: Lessons from Akong'a Labs](/blogs/blog2)
+**Next:** [The Power of Honest Communication in Teams](/blogs/blog4)

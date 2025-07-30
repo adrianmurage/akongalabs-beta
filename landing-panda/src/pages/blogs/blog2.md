@@ -86,9 +86,12 @@ I’m excited for what lies ahead, and I’m even more excited to share that jou
 ---
 
 ## Join the Movement!
-[EMAIL BOX]
+<div>
+  <script async data-uid="4e5ba9cc5c" src="https://akongalabs.kit.com/4e5ba9cc5c/index.js"></script>
+</div>
+
 
 ---
 
-**Previous:** [Why I’m Starting This Company](#)
-**Next:** [Solve, Build, Get Paid: Open Source Bounties at Akong’a](#)
+**Previous:** [Why I’m Starting This Company](/blogs/blog1)
+**Next:** [Solve, Build, Get Paid: Open Source Bounties at Akong’a](/blogs/blog3)
