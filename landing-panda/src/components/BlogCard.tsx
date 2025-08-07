@@ -11,7 +11,7 @@ const BlogCard = ({ title, date, snippet, link }: BlogCardProps) => {
   return (
     <div>
       <p className="bluecolor" >{date}</p>
-      <h1><a href={link}>{title}</a></h1>
+      <h1 className="blog-title"><a href={link}>{title}</a></h1>
       <p className="para_space">{snippet}</p>
       <a className="bluecolor readmore" href={link}>Read more→</a>
     </div>
