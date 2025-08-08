@@ -1,0 +1,34 @@
+---
+import "../../public/styles/mylanding.css"
+import "../../public/images/blog1.webp"
+import "../../public/images/blog2.webp"
+import "../../public/images/blog3.webp"
+import "../../public/images/blog4.webp"
+---
+
+<html lang="en">
+  <head>
+      <head>
+        <meta charset="utf-8" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <meta name="viewport" content="width=device-width" />
+        <title>Blog layout</title>
+  </head>
+  <body >
+    <article class="blog-post">
+        <div class="blog-body">
+            <div class="first_links_snips">
+                <a href="/newLanding">Akong'a Labs</a>
+                <a href="/blogSnippets">Blogs</a>
+            </div>
+            <div></div>
+            <slot /> <!-- where the blog content goes -->
+            <!-- <script async data-uid="4e5ba9cc5c" src="https://akongalabs.kit.com/4e5ba9cc5c/index.js"></script> -->
+            <div class="last_links">
+                <p> <a href="https://x.com/adrianmurage">X</a> </p>
+                <p> <a href="https://github.com/AkongaLabs">GitHub</a></p>
+            </div>
+        </div>
+    </article>
+  </body>
+</html>
