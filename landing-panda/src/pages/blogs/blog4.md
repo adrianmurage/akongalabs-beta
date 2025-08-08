@@ -63,5 +63,4 @@ Understanding opens up space for healthy arguing and dialogue that moves us forw
 </div>
 
 
-
 **Previous:** [Solve, Build, Get Paid: Open Source Bounties at Akong’a](/blogs/blog3)
